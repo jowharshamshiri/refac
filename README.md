@@ -200,17 +200,7 @@ The tool provides comprehensive error handling and reporting:
 - **Collision detection**: Prevents data loss from naming conflicts
 - **Graceful degradation**: Continues processing after non-critical errors
 
-## Performance
-
-### Benchmarks
-
-On typical hardware (modern SSD, multi-core CPU):
-
-- **Small projects** (< 1000 files): < 1 second
-- **Medium projects** (1000-10000 files): 1-10 seconds
-- **Large projects** (> 10000 files): Scales linearly with thread count
-
-### Optimization Tips
+## Performance Optimization Tips
 
 - Use `--threads` to increase parallelism for large datasets
 - Use `--files-only` or `--dirs-only` when appropriate
