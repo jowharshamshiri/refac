@@ -12,9 +12,7 @@ This guide covers multiple ways to install Refac on your system.
 - **Rust toolchain** (if building from source)
 - **Git** (for cloning the repository)
 
-## Installation Methods
-
-### Option 1: From Source (Recommended)
+## Installation Method
 
 This method ensures you get the latest version and can customize the build.
 
@@ -31,30 +29,6 @@ cargo install --path .
 ```
 
 The binary will be installed to your Cargo bin directory (typically `~/.cargo/bin/` on Unix systems).
-
-### Option 2: Pre-built Binaries
-
-Download pre-compiled binaries from the [GitHub releases page](https://github.com/jowharshamshiri/refac/releases).
-
-Available for:
-- **Linux** (x86_64)
-- **macOS** (x86_64 and ARM64)
-- **Windows** (x86_64)
-
-After downloading:
-
-**Linux/macOS:**
-```bash
-# Make executable
-chmod +x refac
-
-# Move to a directory in your PATH
-sudo mv refac /usr/local/bin/
-```
-
-**Windows:**
-1. Extract the executable
-2. Add to your PATH environment variable
 
 ### Option 3: Development Build
 
@@ -94,12 +68,14 @@ refac . "test" "test" --dry-run
 On some distributions, you may need to install additional dependencies:
 
 **Ubuntu/Debian:**
+
 ```bash
 sudo apt update
 sudo apt install build-essential
 ```
 
 **CentOS/RHEL/Fedora:**
+
 ```bash
 sudo yum groupinstall "Development Tools"
 # or on newer versions:
@@ -198,33 +174,40 @@ cargo test --test integration_tests
 ### Common Issues
 
 **"cargo: command not found"**
+
 - Install Rust and Cargo from [rustup.rs](https://rustup.rs/)
 - Ensure `~/.cargo/bin` is in your PATH
 
 **"Permission denied" on installation**
+
 - Use `sudo` for system-wide installation
 - Or install to a user directory: `cargo install --path . --root ~/.local`
 
 **"Binary not found after installation"**
+
 - Check that `~/.cargo/bin` is in your PATH
 - Add to your shell profile: `export PATH="$HOME/.cargo/bin:$PATH"`
 
 **Build errors on older systems**
+
 - Update Rust: `rustup update`
 - Ensure you have a compatible C compiler
 
 ### Platform-Specific Issues
 
 **Linux: "error: Microsoft Visual C++ 14.0 is required"**
+
 - This error is actually for Windows - check you're building on the correct platform
 
 **macOS: "xcrun: error: invalid active developer path"**
+
 ```bash
 # Install Xcode command line tools
 xcode-select --install
 ```
 
 **Windows: "error: linker 'link.exe' not found"**
+
 - Install Microsoft C++ Build Tools
 - Or install Visual Studio with C++ support
 

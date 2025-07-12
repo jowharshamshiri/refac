@@ -48,10 +48,6 @@ cargo build --release
 cargo install --path .
 ```
 
-### Pre-built Binaries
-
-Download the latest binary for your platform from the [releases page](https://github.com/jowharshamshiri/refac/releases).
-
 ## Usage
 
 ### Basic Syntax

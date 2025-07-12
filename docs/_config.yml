@@ -25,13 +25,6 @@ plugins:
 # Permalink structure
 permalink: /:title/
 
-# Table of Contents
-toc:
-  min_level: 2
-  max_level: 3
-  list_class: toc-list
-  item_class: toc-item
-
 # Navigation
 navigation:
   - title: Home

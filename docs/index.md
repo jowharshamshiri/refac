@@ -39,15 +39,13 @@ refac . "oldname" "newname" --backup
 ## Installation
 
 ### From Source
+
 ```bash
 git clone https://github.com/jowharshamshiri/refac
 cd refac
 cargo build --release
 cargo install --path .
 ```
-
-### Pre-built Binaries
-Download from the [releases page](https://github.com/jowharshamshiri/refac/releases).
 
 ## How It Works
 
@@ -57,6 +55,7 @@ Refac performs two types of operations:
 2. **Content Replacement**: Replaces strings inside text files (automatically skips binary files)
 
 By default, both operations are performed. Use mode flags to limit the scope:
+
 - `--names-only`: Only rename files/directories
 - `--content-only`: Only replace file contents
 - `--files-only`: Process files but not directories
@@ -80,6 +79,7 @@ By default, both operations are performed. Use mode flags to limit the scope:
 ## Common Use Cases
 
 ### Project Refactoring
+
 ```bash
 # Rename a class throughout a codebase
 refac ./src "OldClassName" "NewClassName"
@@ -89,6 +89,7 @@ refac ./project "old_variable" "new_variable"
 ```
 
 ### File Organization
+
 ```bash
 # Rename files only, skip content
 refac ./docs "draft" "final" --names-only
@@ -98,6 +99,7 @@ refac ./config "old.example.com" "new.example.com" --content-only
 ```
 
 ### Bulk Operations
+
 ```bash
 # Process specific file types
 refac ./src "oldname" "newname" --include "*.rs" --include "*.toml"
