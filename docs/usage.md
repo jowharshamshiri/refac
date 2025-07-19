@@ -24,6 +24,11 @@ scrap [FILE/DIR] [SUBCOMMAND] [OPTIONS]
 unscrap [FILE/DIR] [OPTIONS]
 ```
 
+### Verbump - Version Management Tool
+```bash
+verbump [SUBCOMMAND] [OPTIONS]
+```
+
 ## Refac - String Replacement
 
 ### Command Syntax
@@ -484,30 +489,132 @@ unscrap old_config.json --to ./backup/
 
 For detailed information, see the [Unscrap Tool Guide]({{ '/unscrap-guide/' | relative_url }}).
 
+## Verbump - Version Management
+
+### Installation and Setup
+
+```bash
+# Navigate to your git repository
+cd your-project/
+
+# Install git hook
+verbump install
+
+# Check status
+verbump status
+```
+
+### Basic Operations
+
+```bash
+# Show current version information
+verbump show
+
+# Manual version update
+verbump update
+
+# Force update (outside git repo)
+verbump update --force
+
+# Check configuration and status
+verbump status
+
+# Uninstall hook
+verbump uninstall
+```
+
+### Configuration
+
+Create `.verbump.json` in your repository root:
+
+```json
+{
+  "version": 1,
+  "enabled": true,
+  "version_file": "version.txt"
+}
+```
+
+### Version Calculation
+
+Verbump calculates versions using:
+- **Major**: Latest git tag (e.g., `v1.2` → `1.2`)
+- **Minor**: Commits since tag
+- **Patch**: Total line changes
+
+```bash
+# Example with git tag v1.0 and 3 commits since tag:
+# Result: 1.0.3.247 (where 247 is total changes)
+```
+
+### Workflow Examples
+
+```bash
+# Setup new project
+git init
+git add .
+git commit -m "Initial commit"
+git tag v1.0
+verbump install
+
+# Normal development (automatic)
+echo "new feature" >> main.rs
+git add .
+git commit -m "Add feature"  # Version auto-updated
+
+# Check current version
+verbump show
+cat version.txt
+
+# Manual version check
+verbump update --force
+```
+
+For detailed information, see the [Verbump Tool Guide]({{ '/verbump-guide/' | relative_url }}).
+
 ## Tool Integration
 
 ### Combined Workflows
 
 ```bash
-# Safe refactoring workflow
-scrap old_implementation.rs  # Backup current code
-refac . "OldClass" "NewClass" --dry-run  # Preview changes
-refac . "OldClass" "NewClass"  # Apply changes
+# Complete development workflow
+verbump install                               # Set up versioning
+scrap temp_* *.log build/                    # Clear workspace
+refac . "OldClass" "NewClass" --dry-run      # Preview changes
+refac . "OldClass" "NewClass"                # Apply changes
+git add . && git commit -m "Refactor class" # Auto-version bump
+
+# Safe refactoring with backup
+scrap old_implementation.rs                  # Backup current code
+verbump show                                 # Note current version
+refac . "OldClass" "NewClass" --dry-run      # Preview changes
+refac . "OldClass" "NewClass"                # Apply changes
 # If issues arise: unscrap old_implementation.rs
 
-# Project cleanup
-scrap temp_* debug_* old_*/  # Move temporary files
-refac . "old_project_name" "new_project_name"  # Rename project
-scrap clean --days 14  # Clean old scrapped files
+# Project cleanup and maintenance
+scrap temp_* debug_* old_*/                  # Move temporary files
+refac . "old_project_name" "new_project_name" # Rename project
+scrap clean --days 14                       # Clean old scrapped files
+verbump status                               # Check version tracking
 ```
 
 ### Automation Scripts
 
 ```bash
 #!/bin/bash
-# safe-refactor.sh
+# safe-refactor.sh - Complete refactoring workflow
 OLD="$1"
 NEW="$2"
+
+# Check verbump is set up
+if ! verbump status >/dev/null 2>&1; then
+    echo "Setting up version tracking..."
+    verbump install
+fi
+
+# Record current version
+CURRENT_VERSION=$(verbump show 2>/dev/null | grep "Full Version" | cut -d: -f2 | xargs)
+echo "Current version: $CURRENT_VERSION"
 
 # Backup current state
 echo "Creating backup..."
@@ -523,6 +630,14 @@ echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     refac . "$OLD" "$NEW"
     echo "Refactoring complete!"
+    
+    # Commit changes (triggers version bump)
+    git add .
+    git commit -m "Refactor: $OLD -> $NEW"
+    
+    # Show new version
+    NEW_VERSION=$(cat version.txt 2>/dev/null || echo "unknown")
+    echo "Version updated: $CURRENT_VERSION -> $NEW_VERSION"
 else
     echo "Operation cancelled."
 fi
@@ -533,5 +648,6 @@ fi
 - Check the [Command Reference]({{ '/api-reference/' | relative_url }}) for complete option details
 - See [Scrap Tool Guide]({{ '/scrap-guide/' | relative_url }}) for advanced file management
 - See [Unscrap Tool Guide]({{ '/unscrap-guide/' | relative_url }}) for restoration workflows
+- See [Verbump Tool Guide]({{ '/verbump-guide/' | relative_url }}) for version management setup
 - See [Examples]({{ '/examples/' | relative_url }}) for more real-world scenarios
 - Report issues at [GitHub Issues](https://github.com/jowharshamshiri/refac/issues)

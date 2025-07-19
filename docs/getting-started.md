@@ -3,146 +3,245 @@ layout: default
 title: Getting Started
 ---
 
-# Getting Started with Refac
+# Getting Started with Refac Tools
 
-This guide will help you get up and running with Refac quickly. Learn the core concepts and basic usage patterns.
+This guide will help you get up and running with the Refac Tools suite quickly. Learn the core concepts and basic usage patterns for all four tools.
 
-## What is Refac?
+## What are Refac Tools?
 
-Refac is a command-line tool that performs recursive string replacement in both file/directory names and file contents. It's designed for large-scale refactoring operations with safety and performance in mind.
+Refac Tools is a comprehensive suite of command-line utilities for developers and system administrators:
+
+- **refac**: Recursive string replacement in file names and contents
+- **scrap**: Smart temporary file management with a `.scrap` folder
+- **unscrap**: File restoration and undo operations  
+- **verbump**: Automatic version management via git hooks
 
 ## Installation
 
-### From Source (Recommended)
+### Easy Installation (Recommended)
 
 ```bash
-# Clone and build
+# Clone and install all tools
 git clone https://github.com/jowharshamshiri/refac.git
 cd refac
-cargo build --release
-cargo install --path .
+./install.sh
 ```
+
+This installs all four tools (`refac`, `scrap`, `unscrap`, `verbump`) to `~/.local/bin`.
 
 ### Verify Installation
 
 ```bash
+# Check all tools are installed
 refac --version
+scrap --version  
+unscrap --version
+verbump --version
+
+# Quick help
 refac --help
+scrap --help
+unscrap --help
+verbump --help
 ```
 
-## Basic Concepts
+## Tool Overview
 
-### Dual Operation Mode
+### 🔄 Refac - String Replacement
 
-Refac performs two types of replacements:
-
-1. **Name Replacement**: Renames files and directories containing the target string
-2. **Content Replacement**: Replaces strings inside text files (skips binary files automatically)
-
-### Command Structure
+Performs recursive string replacement in file names and contents:
 
 ```bash
+# Basic usage
 refac <DIRECTORY> <OLD_STRING> <NEW_STRING> [OPTIONS]
-```
 
-## Your First Refactoring
-
-Let's start with a simple example:
-
-### Step 1: Create a Test Project
-
-```bash
-mkdir test-project
-cd test-project
-echo "function oldFunction() { return 'hello'; }" > oldFile.js
-echo "oldFunction();" > main.js
-```
-
-### Step 2: Preview Changes
-
-Always use `--dry-run` first to see what would change:
-
-```bash
+# Always preview first
 refac . "oldFunction" "newFunction" --dry-run
 ```
 
-This shows you:
-- Which files will be renamed
-- Which files will have content changes
-- A summary of total changes
+### 🗂️ Scrap - File Management
 
-### Step 3: Apply Changes
-
-If the preview looks correct:
+Smart temporary storage with a `.scrap` folder:
 
 ```bash
+# Move files to .scrap folder
+scrap temp_file.txt old_directory/
+
+# List contents
+scrap
+
+# Search and manage
+scrap find "*.log"
+scrap clean
+```
+
+### ↩️ Unscrap - File Restoration
+
+Restore files from `.scrap` folder:
+
+```bash
+# Restore last scrapped item
+unscrap
+
+# Restore specific file
+unscrap filename.txt
+
+# Restore to custom location
+unscrap filename.txt --to /new/path/
+```
+
+### 🏷️ Verbump - Version Management
+
+Automatic versioning via git hooks:
+
+```bash
+# Install git hook
+verbump install
+
+# Show version info
+verbump show
+
+# Check status
+verbump status
+```
+
+## Quick Start Walkthrough
+
+Let's create a sample project and try all tools:
+
+### Step 1: Create Test Project
+
+```bash
+mkdir demo-project
+cd demo-project
+
+# Initialize git (for verbump)
+git init
+git config user.name "Demo User"
+git config user.email "demo@example.com"
+
+# Create some files
+echo "function oldFunction() { return 'hello'; }" > oldFile.js
+echo "oldFunction();" > main.js
+echo "This is a temporary file" > temp.txt
+echo "Log entry 1" > debug.log
+
+# Initial commit
+git add .
+git commit -m "Initial commit"
+```
+
+### Step 2: Try Refac (String Replacement)
+
+```bash
+# Preview changes
+refac . "oldFunction" "newFunction" --dry-run
+
+# Apply changes
 refac . "oldFunction" "newFunction"
+
+# Check results
+cat *.js
 ```
 
-Refac will:
-1. Ask for confirmation (unless you use `--force`)
-2. Apply the changes
-3. Show a summary
-
-### Step 4: Verify Results
+### Step 3: Try Scrap (File Management)
 
 ```bash
-ls -la  # Check renamed files
-cat *.js  # Check content changes
+# Move temporary files to .scrap
+scrap temp.txt debug.log
+
+# List what's in .scrap
+scrap
+
+# Search for files
+scrap find "*.txt"
 ```
 
-## Operation Modes
-
-Control what Refac processes with mode flags:
-
-### Names Only
-Only rename files/directories, don't change content:
+### Step 4: Try Unscrap (File Restoration)
 
 ```bash
+# Restore the last file moved
+unscrap
+
+# Or restore specific file
+unscrap debug.log
+```
+
+### Step 5: Try Verbump (Version Management)
+
+```bash
+# Install git hook for automatic versioning
+verbump install
+
+# Create a tag for versioning base
+git tag v1.0
+
+# Make some changes
+echo "// Updated code" >> main.js
+git add .
+git commit -m "Update main.js"
+
+# Check version information
+verbump show
+
+# The version.txt file is automatically created/updated
+cat version.txt
+```
+
+## Common Workflows
+
+### Development Workflow
+
+```bash
+# 1. Start working on feature
+git checkout -b feature-branch
+
+# 2. Move temporary files out of the way
+scrap temp.txt debug.log old_tests/
+
+# 3. Refactor code as needed
+refac ./src "OldClass" "NewClass" --dry-run
+refac ./src "OldClass" "NewClass"
+
+# 4. Set up automatic versioning
+verbump install
+
+# 5. If you need files back later
+unscrap debug.log
+```
+
+### Project Maintenance
+
+```bash
+# Clean up old temporary files
+scrap clean --days 30
+
+# Archive old items for backup
+scrap archive backup-2024.tar.gz --remove
+
+# Check version status across projects
+verbump status
+
+# Update configuration URLs
+refac ./config "old.api.com" "new.api.com" --content-only
+```
+
+### Refactoring Modes
+
+Refac supports different operation modes:
+
+```bash
+# Only rename files/directories
 refac . "oldProject" "newProject" --names-only
-```
 
-### Content Only
-Only change file contents, don't rename files:
-
-```bash
+# Only change file contents  
 refac . "api.old.com" "api.new.com" --content-only
-```
 
-### Files Only
-Process files but not directories:
+# Target specific file types
+refac ./src "OldStruct" "NewStruct" --include "*.rs"
 
-```bash
-refac . "oldname" "newname" --files-only
-```
-
-### Directories Only
-Process directories but not files:
-
-```bash
-refac . "oldname" "newname" --dirs-only
-```
-
-## Filtering Files
-
-### Include Specific File Types
-
-```bash
-# Only process Rust files
-refac ./src "oldStruct" "newStruct" --include "*.rs"
-
-# Multiple file types
-refac . "oldname" "newname" --include "*.js" --include "*.ts"
-```
-
-### Exclude Unwanted Files
-
-```bash
-# Skip build directories
-refac . "oldname" "newname" --exclude "target/*" --exclude "node_modules/*"
-
-# Skip log files
-refac . "oldname" "newname" --exclude "*.log"
+# Exclude unwanted areas
+refac . "oldname" "newname" --exclude "target/*" --exclude "*.log"
 ```
 
 ## Safety Features
@@ -150,196 +249,254 @@ refac . "oldname" "newname" --exclude "*.log"
 ### Always Preview First
 
 ```bash
-# See exactly what will change
+# Preview refac changes
 refac . "oldname" "newname" --dry-run --verbose
-```
 
-### Create Backups
+# Test scrap operations
+scrap --help  # Review options before using
 
-```bash
-# Create .bak files before changes
-refac . "oldname" "newname" --backup
+# Check verbump status before installation
+verbump status
 ```
 
 ### Use Version Control
 
 ```bash
-# Commit before refactoring
+# Commit before major changes
 git add .
 git commit -m "Before refactoring"
 
-# Apply changes
+# Use verbump to track changes automatically
+verbump install
+
+# Apply refac changes
 refac . "oldname" "newname"
 
-# Review changes
-git diff HEAD~1
+# Scrap temporary files safely (tracked in metadata)
+scrap temp_*.txt build/debug/
+```
+
+### Backup and Recovery
+
+```bash
+# Create backups before refac operations
+refac . "oldname" "newname" --backup
+
+# Archive scrap contents before cleaning
+scrap archive monthly-backup.tar.gz
+
+# Restore files if needed
+unscrap important_file.txt
 ```
 
 ## Common Scenarios
 
-### Rename a Class
+### Complete Project Refactor
 
 ```bash
-# Preview first
-refac ./src "UserController" "AccountController" --dry-run
+# 1. Move build artifacts and logs out of the way
+scrap target/ *.log temp/
 
-# Apply to specific file types
-refac ./src "UserController" "AccountController" \
-  --include "*.rs" \
+# 2. Set up versioning for the refactor
+verbump install
+git tag v1.0  # Mark pre-refactor state
+
+# 3. Rename classes and update imports
+refac ./src "UserController" "AccountController" --dry-run
+refac ./src "UserController" "AccountController" --include "*.rs"
+
+# 4. Update configuration files  
+refac ./config "old.server.com" "new.server.com" --content-only
+
+# 5. Restore any needed artifacts
+unscrap target/some-important-file
+
+# Version is automatically updated due to git hook
+```
+
+### Cleanup and Maintenance
+
+```bash
+# Find and manage temporary files
+scrap find "*.tmp" "*.log" "*~"
+
+# Archive old test data
+scrap old_test_data/ legacy_configs/
+scrap archive test-archive-2024.tar.gz --remove
+
+# Update project URLs across all configs
+refac . "old.company.com" "new.company.com" \
+  --content-only \
+  --include "*.env" \
+  --include "*.yaml" \
   --include "*.toml"
 ```
 
-### Update Configuration
+### Version Management Workflow
 
 ```bash
-# Change URLs in config files only
-refac ./config "old.server.com" "new.server.com" \
-  --content-only \
-  --include "*.env" \
-  --include "*.yaml"
+# Set up versioning for new project
+git init
+git add .
+git commit -m "Initial commit"
+git tag v0.1.0
+verbump install
+
+# Normal development - versions update automatically
+echo "new feature" >> src/main.rs
+git add .
+git commit -m "Add new feature"  # Version bumped automatically
+
+# Check current version
+verbump show
+cat version.txt
 ```
 
-### Project Rename
+## Performance and Efficiency
+
+### Refac Performance
 
 ```bash
-# Rename entire project
-refac . "OldProjectName" "NewProjectName" \
-  --exclude ".git/*" \
-  --exclude "target/*"
-```
-
-## Performance Tips
-
-### Use Multiple Threads
-
-```bash
-# Faster processing for large projects
+# Use multiple threads for large projects
 refac . "oldname" "newname" --threads 8
-```
 
-### Limit Search Depth
-
-```bash
-# Avoid deep directory traversal
+# Limit search depth to avoid deep traversal
 refac . "oldname" "newname" --max-depth 3
-```
 
-### Target Specific Areas
-
-```bash
-# Process only source directories
+# Target specific areas
 refac ./src "oldname" "newname"
-refac ./tests "oldname" "newname"
 ```
 
-## Advanced Features
-
-### Regular Expressions
+### Scrap Efficiency
 
 ```bash
-# Use regex patterns
-refac . "version_\d+" "version_2" --regex
+# Batch operations for multiple files
+scrap file1.txt file2.txt dir1/ dir2/
 
-# Case-insensitive matching
-refac . "oldname" "newname" --ignore-case
+# Use patterns for bulk operations
+scrap find "*.tmp" | xargs scrap
+
+# Regular cleanup to maintain performance
+scrap clean --days 7  # Remove old items
 ```
 
-### Output Formats
+### Verbump Optimization
 
 ```bash
-# JSON output for scripting
-refac . "oldname" "newname" --format json
+# Configure once per repository
+verbump install --force  # Update existing hook
 
-# Plain text output
-refac . "oldname" "newname" --format plain
+# Use custom version files for different tools
+echo '{"version_file": "src/version.rs"}' > .verbump.json
 ```
 
 ## Best Practices
 
-### 1. Start Small
-Begin with a small directory or specific file types:
+### 1. Tool-Specific Guidelines
+
+**Refac:**
+- Always use `--dry-run` first
+- Be specific with include/exclude patterns
+- Use version control before major changes
+
+**Scrap:**
+- Regular cleanup with `scrap clean`
+- Archive important items before purging
+- Use metadata tracking for restoration
+
+**Verbump:**
+- Install hooks early in project lifecycle
+- Create meaningful git tags for major versions
+- Monitor logs for troubleshooting
+
+### 2. Integrated Workflow
 
 ```bash
-refac ./src/utils "oldUtil" "newUtil" --include "*.rs"
+# Safe development cycle
+git checkout -b feature-branch
+scrap temp_files/ debug_logs/         # Clear workspace
+refac ./src "OldAPI" "NewAPI" --dry-run  # Preview changes
+refac ./src "OldAPI" "NewAPI"         # Apply changes
+verbump install                       # Track versions
+git add . && git commit -m "Refactor API"  # Auto-version
 ```
 
-### 2. Always Test
-- Use `--dry-run` before applying changes
-- Run your test suite after refactoring
-- Commit changes incrementally
+### 3. Project Organization
 
-### 3. Be Specific
-Use include/exclude patterns to limit scope:
-
-```bash
-refac ./project "oldname" "newname" \
-  --include "*.rs" \
-  --exclude "*test*" \
-  --exclude "target/*"
-```
-
-### 4. Handle Large Projects
-- Use threading: `--threads 8`
-- Limit depth: `--max-depth 3`
-- Process in batches by directory
+- Use `.gitignore` for scrap folder (automatically handled)
+- Configure verbump early in project setup
+- Establish naming conventions before bulk refactoring
+- Keep restoration metadata for important files
 
 ## Getting Help
 
-### Command Help
+### Tool-Specific Help
 
 ```bash
-# General help
+# Detailed help for each tool
 refac --help
+scrap --help  
+unscrap --help
+verbump --help
 
-# See all options
-refac --help | less
-```
-
-### Verbose Output
-
-```bash
-# See detailed operation info
-refac . "oldname" "newname" --dry-run --verbose
+# Verbose output for debugging
+refac . "old" "new" --dry-run --verbose
+scrap find "pattern" --verbose
+verbump status
 ```
 
 ### Common Issues
 
-**No changes found:**
-- Check if the string exists: `grep -r "oldname" .`
-- Use `--verbose` to see what's being processed
-- Verify include/exclude patterns
+**Refac not finding files:**
+- Use `--verbose` to see what's processed
+- Check include/exclude patterns
+- Verify file permissions
 
-**Permission errors:**
-- Check file permissions: `ls -la`
-- Use `--verbose` to see which files are skipped
+**Scrap operations failing:**
+- Check disk space for .scrap folder
+- Verify file permissions
+- Review metadata with `scrap list`
+
+**Verbump not working:**
+- Ensure you're in a git repository
+- Check if hook is executable: `ls -la .git/hooks/pre-commit`
+- Verify verbump is in PATH
 
 ## Next Steps
 
-Now that you understand the basics:
+### Learn More
 
-1. [Usage Guide]({{ '/usage/' | relative_url }}) - Comprehensive usage examples
-2. [Command Reference]({{ '/api-reference/' | relative_url }}) - Complete option documentation  
-3. [Examples]({{ '/examples/' | relative_url }}) - Real-world scenarios
+1. **Tool-Specific Guides:**
+   - [Scrap Guide]({{ '/scrap-guide/' | relative_url }}) - Advanced file management
+   - [Unscrap Guide]({{ '/unscrap-guide/' | relative_url }}) - File restoration techniques
+   - [Verbump Guide]({{ '/verbump-guide/' | relative_url }}) - Version management setup
 
-## Quick Reference
+2. **Comprehensive Resources:**
+   - [Usage Guide]({{ '/usage/' | relative_url }}) - Detailed examples for all tools
+   - [API Reference]({{ '/api-reference/' | relative_url }}) - Complete command documentation
+   - [Examples]({{ '/examples/' | relative_url }}) - Real-world scenarios
+
+### Quick Reference Card
 
 ```bash
-# Basic usage
-refac . "old" "new"
+# === REFAC - String Replacement ===
+refac . "old" "new" --dry-run        # Preview changes
+refac . "old" "new" --include "*.rs" # Specific files
+refac . "old" "new" --names-only     # Rename only
 
-# Preview changes
-refac . "old" "new" --dry-run
+# === SCRAP - File Management ===
+scrap file.txt dir/                  # Move to .scrap
+scrap                                # List contents
+scrap find "*.log"                   # Search files
+scrap clean --days 30               # Remove old items
 
-# Specific file types
-refac . "old" "new" --include "*.rs"
+# === UNSCRAP - File Restoration ===
+unscrap                              # Restore last item
+unscrap file.txt                     # Restore specific file
+unscrap file.txt --to /new/path/     # Custom destination
 
-# Names or content only
-refac . "old" "new" --names-only
-refac . "old" "new" --content-only
-
-# With backups
-refac . "old" "new" --backup
-
-# Force without confirmation
-refac . "old" "new" --force
+# === VERBUMP - Version Management ===
+verbump install                      # Install git hook
+verbump show                         # Display version info
+verbump status                       # Check configuration
 ```

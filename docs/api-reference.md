@@ -5,13 +5,35 @@ title: Command Reference
 
 # Command Reference
 
-Complete reference for all Refac command-line options and usage patterns.
+Complete reference for all Refac Tools command-line options and usage patterns.
 
-## Synopsis
+## Tools Overview
 
+The Refac Tools suite includes four command-line utilities:
+
+### Refac - String Replacement
 ```bash
 refac <ROOT_DIR> <OLD_STRING> <NEW_STRING> [OPTIONS]
 ```
+
+### Scrap - File Management
+```bash
+scrap [PATH...] [SUBCOMMAND] [OPTIONS]
+```
+
+### Unscrap - File Restoration  
+```bash
+unscrap [NAME] [OPTIONS]
+```
+
+### Verbump - Version Management
+```bash
+verbump [SUBCOMMAND] [OPTIONS]
+```
+
+---
+
+## Refac Command Reference
 
 ## Arguments
 
@@ -381,16 +403,151 @@ This will show:
 - Why files are being skipped
 - Detailed pattern matching information
 
-## Getting Help
+---
 
+## Scrap Command Reference
+
+### Synopsis
 ```bash
-# Show help
-refac --help
-
-# Show version
-refac --version
+scrap [PATH...] [SUBCOMMAND] [OPTIONS]
 ```
 
+### Basic Operations
+```bash
+# Move files/directories to .scrap folder
+scrap file.txt directory/
+
+# List .scrap contents (default when no args)
+scrap
+scrap list [--sort name|date|size]
+```
+
+### Subcommands
+
+| Subcommand | Description | Options |
+|------------|-------------|---------|
+| `list` | List .scrap contents | `--sort name\|date\|size` |
+| `clean` | Remove old items | `--days N`, `--dry-run` |
+| `purge` | Remove all items | `--force` |
+| `find` | Search for patterns | `--content` |
+| `archive` | Create archive | `--output FILE`, `--remove` |
+
+### Examples
+```bash
+scrap temp.txt logs/                    # Move to .scrap
+scrap list --sort size                  # List by size
+scrap find "*.log"                      # Find log files
+scrap clean --days 30                   # Remove old items
+scrap archive backup.tar.gz --remove   # Archive and remove
+scrap purge --force                     # Remove everything
+```
+
+---
+
+## Unscrap Command Reference
+
+### Synopsis
+```bash
+unscrap [NAME] [OPTIONS]
+```
+
+### Operations
+
+| Command | Description |
+|---------|-------------|
+| `unscrap` | Restore last scrapped item |
+| `unscrap NAME` | Restore specific item |
+| `unscrap NAME --to PATH` | Restore to custom location |
+| `unscrap NAME --force` | Overwrite existing files |
+
+### Options
+
+| Option | Description |
+|--------|-------------|
+| `--to PATH` | Custom restoration path |
+| `--force` | Overwrite existing files |
+| `--help` | Show help |
+| `--version` | Show version |
+
+### Examples
+```bash
+unscrap                           # Restore last item
+unscrap important_file.txt        # Restore specific file
+unscrap config.json --to backup/  # Restore to directory
+unscrap data.txt --force          # Overwrite existing
+```
+
+---
+
+## Verbump Command Reference
+
+### Synopsis
+```bash
+verbump [SUBCOMMAND] [OPTIONS]
+```
+
+### Subcommands
+
+| Subcommand | Description | Options |
+|------------|-------------|---------|
+| `install` | Install git pre-commit hook | `--force` |
+| `uninstall` | Remove git hook | |
+| `show` | Display version information | |
+| `update` | Manually update version | `--force` |
+| `status` | Show configuration status | |
+
+### Configuration
+
+Create `.verbump.json` in repository root:
+```json
+{
+  "version": 1,
+  "enabled": true,
+  "version_file": "version.txt"
+}
+```
+
+### Version Format
+
+`{major}.{minor}.{patch}`
+
+- **Major**: From git tags (e.g., `v1.2` → `1.2`)
+- **Minor**: Commits since tag
+- **Patch**: Total line changes
+
+### Examples
+```bash
+verbump install                 # Install git hook
+verbump install --force         # Force reinstall
+verbump show                    # Show version info
+verbump update                  # Manual update
+verbump status                  # Check status
+verbump uninstall              # Remove hook
+```
+
+---
+
+## Getting Help
+
+### Tool-Specific Help
+```bash
+# Show help for each tool
+refac --help
+scrap --help
+unscrap --help
+verbump --help
+
+# Show versions
+refac --version
+scrap --version
+unscrap --version
+verbump --version
+```
+
+### Resources
+
 For more information:
+- [Getting Started]({{ '/getting-started/' | relative_url }}) - Quick start guide
 - [Usage Guide]({{ '/usage/' | relative_url }}) - Comprehensive usage examples
+- [Tool-Specific Guides]({{ '/scrap-guide/' | relative_url }}) - Individual tool documentation
 - [GitHub Issues](https://github.com/jowharshamshiri/refac/issues) - Report bugs or request features

@@ -26,7 +26,7 @@ cd refac
 ```
 
 The installation script will:
-- Build all tools (`refac`, `scrap`, `unscrap`) in release mode
+- Build all tools (`refac`, `scrap`, `unscrap`, `verbump`) in release mode
 - Install to `~/.local/bin` by default
 - Check for updates on subsequent runs
 - Create shell integration for enhanced functionality
@@ -66,6 +66,7 @@ cargo install --path .
 cargo install --path . --bin refac
 cargo install --path . --bin scrap
 cargo install --path . --bin unscrap
+cargo install --path . --bin verbump
 ```
 
 The binaries will be installed to your Cargo bin directory (typically `~/.cargo/bin/` on Unix systems).
@@ -91,14 +92,22 @@ cargo build
 Verify your installation:
 
 ```bash
-# Check version
+# Check versions of all tools
 refac --version
+scrap --version
+unscrap --version
+verbump --version
 
-# View help
+# View help for each tool
 refac --help
+scrap --help
+unscrap --help
+verbump --help
 
-# Test with dry run
-refac . "test" "test" --dry-run
+# Test basic functionality
+refac . "test" "test" --dry-run    # Test string replacement
+scrap --help                       # Test scrap functionality
+verbump status                     # Test verbump (outside git repo)
 ```
 
 ## Platform-Specific Notes
@@ -145,13 +154,18 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 To update to the latest version:
 
 ```bash
-# If installed from source
+# If installed via install.sh script
+cd /path/to/refac
+git pull
+./install.sh --force
+
+# If installed via cargo install
 cd /path/to/refac
 git pull
 cargo install --path . --force
 
 # If using pre-built binaries
-# Download the latest release and replace the binary
+# Download the latest release and replace all binaries
 ```
 
 ## Uninstalling
@@ -159,12 +173,17 @@ cargo install --path . --force
 To remove Refac:
 
 ```bash
-# If installed via cargo install
-cargo uninstall refac
+# If installed via install.sh script
+./uninstall.sh
 
-# If installed manually
-# Remove the binary from your PATH location
-sudo rm /usr/local/bin/refac  # Linux/macOS
+# If installed via cargo install (individual tools)
+cargo uninstall refac
+cargo uninstall scrap
+cargo uninstall unscrap
+cargo uninstall verbump
+
+# If installed manually (remove all binaries)
+sudo rm /usr/local/bin/{refac,scrap,unscrap,verbump}  # Linux/macOS
 ```
 
 ## Building from Source (Advanced)

@@ -1,12 +1,12 @@
 ---
 layout: default
-title: Refac Tools - File Management Suite
+title: Refac Tools - Command-Line Tool Suite
 toc: false
 ---
 
 # Refac Tools
 
-A comprehensive collection of robust, cross-platform command-line tools for file and directory operations. The suite includes **refac** for string replacement, **scrap** for smart file management, and **unscrap** for file restoration. Designed for safety, reliability, and performance, making them suitable for mission-critical operations.
+A comprehensive suite of robust, cross-platform command-line tools for developers and system administrators. The suite includes **refac** for string replacement, **scrap** for smart file management, **unscrap** for file restoration, and **verbump** for automatic version management. Designed for safety, reliability, and performance, making them suitable for mission-critical operations and daily development workflows.
 
 ## Tools Overview
 
@@ -27,6 +27,12 @@ A comprehensive collection of robust, cross-platform command-line tools for file
 - **Undo Operations**: Quickly undo the last scrap action
 - **Custom Destinations**: Restore to any location
 - **Conflict Handling**: Safe restoration with overwrite protection
+
+### 🏷️ Verbump - Automatic Version Management
+- **Git Integration**: Automatic version bumping via git hooks
+- **Smart Versioning**: Calculate versions based on tags, commits, and changes
+- **Configuration**: Customizable version files and patterns
+- **Logging**: Comprehensive action logging for audit trails
 
 ## Key Features
 
@@ -79,6 +85,21 @@ unscrap filename.txt
 unscrap filename.txt --to /new/location/
 ```
 
+### Verbump - Version Management
+```bash
+# Install git hook for automatic versioning
+verbump install
+
+# Show current version information
+verbump show
+
+# Manually update version
+verbump update
+
+# Check verbump status and configuration
+verbump status
+```
+
 ## Installation
 
 ### From Source
@@ -95,6 +116,7 @@ cargo install --path .
 cargo install --path . --bin refac
 cargo install --path . --bin scrap
 cargo install --path . --bin unscrap
+cargo install --path . --bin verbump
 ```
 
 ## How It Works
@@ -168,8 +190,8 @@ refac ./project "oldname" "newname" --exclude "target/*" --exclude "*.log"
 
 ## Getting Help
 
-- View all options: `refac --help`
-- Check version: `refac --version`
+- View tool options: `refac --help`, `scrap --help`, `unscrap --help`, `verbump --help`
+- Check versions: `refac --version`, `scrap --version`, `unscrap --version`, `verbump --version`
 - Report issues: [GitHub Issues](https://github.com/jowharshamshiri/refac/issues)
 
 ## Documentation

@@ -1,8 +1,9 @@
 # Site settings
-title: Refac - Code Refactoring Tool
+title: Refac Tools - Command-Line Tool Suite
 description: >-
-  A command-line tool for automated code refactoring across multiple programming languages.
-  Simplify your codebase with intelligent pattern matching and transformation capabilities.
+  A comprehensive suite of command-line tools for file management, string replacement, 
+  temporary storage, and version control. Includes refac (string replacement), 
+  scrap (smart file management), unscrap (file restoration), and verbump (automatic versioning).
 author: Bahram Shamshiri
 email: jowharshamshiri@gmail.com
 baseurl: "/refac"
@@ -33,6 +34,14 @@ navigation:
     url: /getting-started/
   - title: Installation
     url: /installation/
+  - title: Tool Guides
+    subnav:
+      - title: Scrap Guide
+        url: /scrap-guide/
+      - title: Unscrap Guide
+        url: /unscrap-guide/
+      - title: Verbump Guide
+        url: /verbump-guide/
   - title: Usage Guide
     url: /usage/
   - title: API Reference

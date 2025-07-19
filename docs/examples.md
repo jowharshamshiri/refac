@@ -5,11 +5,229 @@ title: Examples
 
 # Real-World Examples
 
-Learn how to use Refac through practical examples for common refactoring scenarios.
+Learn how to use the Refac Tools suite through practical examples for common development workflows, combining refactoring, file management, and version control.
 
-## Basic String Replacement
+## Complete Development Workflows
 
-### Rename Variables Throughout Project
+### Project Refactoring with Version Tracking
+
+**Scenario**: Major refactoring of a class while maintaining version history and safely managing temporary files.
+
+```bash
+# 1. Set up version tracking
+verbump install
+git tag v1.0  # Mark current state
+
+# 2. Clean workspace
+scrap temp_files/ debug_logs/ old_tests/
+
+# 3. Preview and apply refactoring
+refac ./src "UserManager" "AccountManager" --dry-run
+refac ./src "UserManager" "AccountManager" --include "*.rs" --include "*.toml"
+
+# 4. Commit changes (auto-bumps version)
+git add .
+git commit -m "Refactor: UserManager -> AccountManager"
+
+# 5. Check new version
+verbump show
+cat version.txt  # Shows new version: v1.0.1.X
+```
+
+### Safe Experimental Development
+
+**Scenario**: Trying experimental changes with easy rollback.
+
+```bash
+# 1. Backup current implementation
+scrap src/experimental.rs src/core.rs
+
+# 2. Note current version
+CURRENT_VERSION=$(verbump show | grep "Full Version" | cut -d: -f2 | xargs)
+echo "Starting experiment from version: $CURRENT_VERSION"
+
+# 3. Make experimental changes
+refac ./src "old_algorithm" "new_algorithm" --content-only
+
+# 4. If experiment fails, restore easily
+unscrap experimental.rs
+unscrap core.rs
+
+# 5. If experiment succeeds, commit
+git add . && git commit -m "Implement new algorithm"
+```
+
+### CI/CD Preparation Workflow
+
+**Scenario**: Preparing a release with proper cleanup and versioning.
+
+```bash
+# 1. Archive old artifacts
+scrap find "*.tmp" "*.log" "target/debug/*"
+scrap archive pre-release-cleanup.tar.gz --remove
+
+# 2. Update configuration for production
+refac ./config "dev.api.com" "prod.api.com" --content-only
+refac ./config "debug=true" "debug=false" --content-only
+
+# 3. Ensure version tracking is set up
+verbump status || verbump install
+
+# 4. Create release commit
+git add .
+git commit -m "Prepare for production release"
+
+# 5. Tag the release
+NEW_VERSION=$(cat version.txt)
+git tag "v$NEW_VERSION"
+echo "Tagged release: v$NEW_VERSION"
+```
+
+---
+
+## Individual Tool Examples
+
+### Scrap - File Management
+
+#### Development Workspace Cleanup
+
+**Scenario**: Clean up temporary files and build artifacts during development.
+
+```bash
+# Move temporary files to .scrap
+scrap *.tmp *.log build/ target/debug/
+
+# List what's been scrapped
+scrap list --sort size
+
+# Find specific patterns
+scrap find "*.log"
+scrap find "test" --content  # Search file contents
+
+# Clean up old items (older than 7 days)
+scrap clean --days 7 --dry-run
+scrap clean --days 7
+```
+
+#### Project Archive Management
+
+**Scenario**: Managing old versions and experimental code.
+
+```bash
+# Archive old implementation before refactoring
+scrap old_implementation/ legacy_tests/
+
+# Create timestamped archives
+scrap archive "backup-$(date +%Y%m%d).tar.gz"
+
+# Move items and archive in one step
+scrap experimental_feature/ prototype/
+scrap archive --output experiments-2024.tar.gz --remove
+```
+
+### Unscrap - File Restoration
+
+#### Undo Recent Changes
+
+**Scenario**: Need to restore files after a mistake.
+
+```bash
+# Restore the last scrapped item
+unscrap
+
+# Check what's available to restore
+scrap list
+
+# Restore specific file to original location
+unscrap important_config.json
+
+# Restore to a different location
+unscrap data.sql --to backup/
+```
+
+#### Selective File Recovery
+
+**Scenario**: Restore only specific files from a cleanup.
+
+```bash
+# After cleaning workspace, need one file back
+scrap temp_files/ logs/ build/
+# ... realize you need a log file
+unscrap server.log
+
+# Restore to custom location without overwriting
+unscrap config.json --to ./backup/ --force
+```
+
+### Verbump - Version Management
+
+#### Project Setup and Release Management
+
+**Scenario**: Setting up automatic versioning for a new project.
+
+```bash
+# Initialize project with versioning
+git init
+echo "Initial code" > main.rs
+git add .
+git commit -m "Initial commit"
+
+# Set base version and install hook
+git tag v0.1.0
+verbump install
+
+# Normal development with automatic versioning
+echo "new feature" >> main.rs
+git add .
+git commit -m "Add feature"  # Version auto-incremented
+
+# Check version progression
+verbump show
+cat version.txt  # 0.1.1.X (1 commit since tag, X changes)
+```
+
+#### Release Workflow Integration
+
+**Scenario**: Integrating versioning with release process.
+
+```bash
+# Create feature branch with versioning
+git checkout -b feature-auth
+verbump install --force  # Ensure hook is active
+
+# Development commits auto-increment version
+git commit -m "Add auth module"     # v0.1.2.Y
+git commit -m "Add user validation" # v0.1.3.Z
+
+# Prepare for release
+git checkout main
+git merge feature-auth
+git tag v0.2.0  # New major/minor version
+
+# Future commits will be v0.2.X.Y
+```
+
+#### CI/CD Integration
+
+**Scenario**: Using versions in build scripts.
+
+```bash
+# In build script
+VERSION=$(cat version.txt)
+echo "Building version: $VERSION"
+
+# Use in Docker builds
+docker build -t myapp:$VERSION .
+docker build -t myapp:latest .
+
+# Use in artifact naming
+cargo build --release
+cp target/release/myapp "releases/myapp-$VERSION"
+```
+
+### Refac - String Replacement
+
+#### Rename Variables Throughout Project
 
 **Scenario**: You need to rename a variable across your entire codebase.
 
@@ -509,4 +727,199 @@ refac . "oldname" "newname" \
   --verbose
 ```
 
-These examples demonstrate the versatility and power of Refac for various refactoring scenarios. Remember to always use `--dry-run` first and maintain backups of important files.
+---
+
+## Complete Tool Suite Workflows
+
+### Full-Stack Application Refactoring
+
+**Scenario**: Refactoring an entire application with proper backup, versioning, and cleanup.
+
+```bash
+#!/bin/bash
+# complete-refactor.sh - Full application refactoring workflow
+
+PROJECT_NAME="$1"
+OLD_NAME="$2"
+NEW_NAME="$3"
+
+echo "=== Starting Complete Refactoring Workflow ==="
+echo "Project: $PROJECT_NAME"
+echo "Refactor: $OLD_NAME -> $NEW_NAME"
+
+# 1. Setup versioning if not already configured
+echo "Setting up version tracking..."
+if ! verbump status >/dev/null 2>&1; then
+    verbump install
+    echo "Verbump installed"
+fi
+
+# Record starting version
+START_VERSION=$(verbump show 2>/dev/null | grep "Full Version" | cut -d: -f2 | xargs)
+echo "Starting version: $START_VERSION"
+
+# 2. Clean workspace
+echo "Cleaning workspace..."
+scrap target/ build/ *.log *.tmp node_modules/ .cache/
+scrap archive "pre-refactor-backup-$(date +%s).tar.gz"
+echo "Workspace cleaned and archived"
+
+# 3. Preview changes
+echo "Previewing changes..."
+refac . "$OLD_NAME" "$NEW_NAME" --dry-run --verbose
+
+# 4. Confirm with user
+read -p "Apply these changes? (y/N) " -n 1 -r
+echo
+if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    echo "Refactoring cancelled"
+    exit 0
+fi
+
+# 5. Apply refactoring in stages
+echo "Applying refactoring..."
+
+# Code files first
+refac ./src "$OLD_NAME" "$NEW_NAME" --include "*.rs" --include "*.py" --include "*.js"
+
+# Configuration files
+refac ./config "$OLD_NAME" "$NEW_NAME" --content-only
+
+# Documentation
+refac ./docs "$OLD_NAME" "$NEW_NAME"
+
+# Build files
+refac . "$OLD_NAME" "$NEW_NAME" --include "*.toml" --include "*.json" --include "*.yaml"
+
+# 6. Commit changes (triggers version bump)
+echo "Committing changes..."
+git add .
+git commit -m "Refactor: $OLD_NAME -> $NEW_NAME
+
+- Updated all source files
+- Updated configuration
+- Updated documentation
+- Updated build files"
+
+# 7. Show results
+END_VERSION=$(cat version.txt 2>/dev/null || echo "unknown")
+echo "=== Refactoring Complete ==="
+echo "Version: $START_VERSION -> $END_VERSION"
+echo "Files changed: $(git diff HEAD~1 --name-only | wc -l)"
+
+# 8. Cleanup
+echo "Final cleanup..."
+scrap *.orig *.bak  # Remove any backup files created during refactoring
+echo "Refactoring workflow complete!"
+```
+
+### Team Development Workflow
+
+**Scenario**: Establishing a consistent workflow for a development team.
+
+```bash
+# team-setup.sh - Setup Refac Tools for team development
+
+# 1. Install all tools for the team
+./install.sh
+
+# 2. Setup project-wide versioning
+verbump install
+
+# 3. Create team workspace management script
+cat > team-cleanup.sh << 'EOF'
+#!/bin/bash
+# Team workspace cleanup
+
+echo "Cleaning workspace..."
+scrap find "*.tmp" "*.log" "*~" ".DS_Store"
+scrap clean --days 3
+
+echo "Archiving old experiments..."
+scrap find "experiment_*" "test_*" "old_*"
+scrap archive "team-cleanup-$(date +%Y%m%d).tar.gz" --remove
+
+echo "Workspace cleaned!"
+EOF
+
+chmod +x team-cleanup.sh
+
+# 4. Create refactoring safety script
+cat > safe-refactor.sh << 'EOF'
+#!/bin/bash
+OLD="$1"
+NEW="$2"
+
+if [ -z "$OLD" ] || [ -z "$NEW" ]; then
+    echo "Usage: $0 <old_string> <new_string>"
+    exit 1
+fi
+
+# Backup current state
+scrap archive "backup-$(date +%s).tar.gz"
+
+# Preview changes
+echo "Previewing changes..."
+refac . "$OLD" "$NEW" --dry-run
+
+# Apply with confirmation
+read -p "Apply changes? (y/N) " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    refac . "$OLD" "$NEW"
+    git add . && git commit -m "Refactor: $OLD -> $NEW"
+    echo "Refactoring complete!"
+else
+    echo "Cancelled"
+fi
+EOF
+
+chmod +x safe-refactor.sh
+
+echo "Team development tools configured!"
+echo "Usage:"
+echo "  ./team-cleanup.sh     - Clean workspace"
+echo "  ./safe-refactor.sh old new - Safe refactoring"
+```
+
+### Release Pipeline Integration
+
+**Scenario**: Integrating Refac Tools into a CI/CD pipeline.
+
+```bash
+# release-pipeline.sh - Automated release preparation
+
+# 1. Clean build artifacts
+scrap target/ build/ *.log
+scrap purge --force  # Clear all previous scrap items
+
+# 2. Update environment configurations
+refac ./config "development" "production" --content-only
+refac ./config "debug=true" "debug=false" --content-only
+refac ./config "localhost" "$PROD_HOST" --content-only
+
+# 3. Update version and create release
+if verbump status; then
+    # Version automatically updated on commit
+    git add .
+    git commit -m "Prepare production release"
+    
+    # Tag the release
+    RELEASE_VERSION=$(cat version.txt)
+    git tag "v$RELEASE_VERSION"
+    
+    echo "Release v$RELEASE_VERSION prepared"
+else
+    echo "Warning: Verbump not configured"
+fi
+
+# 4. Generate release artifacts
+mkdir -p releases/
+tar -czf "releases/app-v$RELEASE_VERSION.tar.gz" \
+    --exclude=target --exclude=.git --exclude=.scrap .
+
+echo "Release pipeline complete!"
+echo "Artifact: releases/app-v$RELEASE_VERSION.tar.gz"
+```
+
+These comprehensive examples demonstrate how the Refac Tools suite provides a complete solution for development workflow management, combining safe refactoring, intelligent file management, and automatic version tracking.
