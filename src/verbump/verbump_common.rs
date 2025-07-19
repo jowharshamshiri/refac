@@ -157,10 +157,21 @@ fn get_total_changes() -> Result<u32> {
     Ok(total)
 }
 
-pub fn update_version_file(version_info: &VersionInfo, config: &VerbumpConfig) -> Result<()> {
-    // Update the main version file
+pub fn update_version_file(version_info: &VersionInfo, config: &VerbumpConfig) -> Result<bool> {
+    // Check if version has actually changed
     let version_file_path = PathBuf::from(&config.version_file);
+    let current_version_content = if version_file_path.exists() {
+        fs::read_to_string(&version_file_path).unwrap_or_default().trim().to_string()
+    } else {
+        String::new()
+    };
     
+    if current_version_content == version_info.full_version {
+        println!("Version {} is already up to date", version_info.full_version);
+        return Ok(false);
+    }
+    
+    // Update the main version file
     fs::write(&version_file_path, format!("{}\n", version_info.full_version))
         .with_context(|| format!("Failed to write version to {}", version_file_path.display()))?;
 
@@ -235,7 +246,7 @@ pub fn update_version_file(version_info: &VersionInfo, config: &VerbumpConfig) -
         }
     }
 
-    Ok(())
+    Ok(true)
 }
 
 fn detect_file_type(path: &Path) -> Option<ProjectFileType> {
@@ -766,5 +777,39 @@ set(CMAKE_CXX_STANDARD 17)
         let loaded_config = VerbumpConfig::load(temp_dir.path()).unwrap();
         assert_eq!(loaded_config.auto_detect_project_files, true);
         assert!(loaded_config.project_files.is_empty());
+    }
+
+    #[test]
+    fn test_update_version_file_no_change() {
+        let temp_dir = TempDir::new().unwrap();
+        let config = VerbumpConfig::default();
+        
+        let version_info = VersionInfo {
+            major_version: "v1.0".to_string(),
+            minor_version: 5,
+            patch_version: 100,
+            full_version: "1.0.5.100".to_string(),
+        };
+        
+        // Create version file with same version
+        let version_file_path = temp_dir.path().join("version.txt");
+        fs::write(&version_file_path, "1.0.5.100\n").unwrap();
+        
+        // Change working directory for the test
+        let original_dir = std::env::current_dir().unwrap();
+        std::env::set_current_dir(temp_dir.path()).unwrap();
+        
+        // Update should detect no change
+        let result = update_version_file(&version_info, &config);
+        
+        // Restore original directory
+        std::env::set_current_dir(original_dir).unwrap();
+        
+        assert!(result.is_ok());
+        assert_eq!(result.unwrap(), false); // Should return false indicating no update
+        
+        // File should still exist with same content
+        let content = fs::read_to_string(&version_file_path).unwrap();
+        assert_eq!(content.trim(), "1.0.5.100");
     }
 }

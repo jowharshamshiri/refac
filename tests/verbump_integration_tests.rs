@@ -709,3 +709,68 @@ fn test_verbump_manual_project_files() {
     let updated_cargo = fs::read_to_string(temp_dir.path().join("Cargo.toml")).unwrap();
     assert!(!updated_cargo.contains("version = \"1.0.0\""));
 }
+
+#[test]
+fn test_verbump_no_update_when_version_unchanged() {
+    let temp_dir = TempDir::new().unwrap();
+    setup_git_repo(temp_dir.path()).unwrap();
+    create_test_commits(temp_dir.path(), 1).unwrap();
+    
+    // Create a Cargo.toml file
+    let cargo_content = r#"[package]
+name = "test-project"
+version = "0.1.0"
+"#;
+    fs::write(temp_dir.path().join("Cargo.toml"), cargo_content).unwrap();
+    
+    // Run verbump update first time
+    Command::cargo_bin("verbump")
+        .unwrap()
+        .arg("update")
+        .arg("--force")
+        .current_dir(temp_dir.path())
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("Updated version to"));
+    
+    // Get the version that was set
+    let version_content = fs::read_to_string(temp_dir.path().join("version.txt")).unwrap();
+    let version = version_content.trim();
+    
+    // Run verbump update second time (no git changes)
+    Command::cargo_bin("verbump")
+        .unwrap()
+        .arg("update")
+        .arg("--force")
+        .current_dir(temp_dir.path())
+        .assert()
+        .success()
+        .stdout(predicate::str::contains(&format!("Version {} is already up to date", version)))
+        .stdout(predicate::str::contains("Updated project files").not());
+    
+    // Cargo.toml should not have been modified again
+    let cargo_modified_time = fs::metadata(temp_dir.path().join("Cargo.toml"))
+        .unwrap()
+        .modified()
+        .unwrap();
+    
+    // Sleep a bit and run again to make sure file timestamp would change if modified
+    std::thread::sleep(std::time::Duration::from_millis(100));
+    
+    Command::cargo_bin("verbump")
+        .unwrap()
+        .arg("update")
+        .arg("--force")
+        .current_dir(temp_dir.path())
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("already up to date"));
+    
+    // File should not have been touched
+    let cargo_modified_time_after = fs::metadata(temp_dir.path().join("Cargo.toml"))
+        .unwrap()
+        .modified()
+        .unwrap();
+    
+    assert_eq!(cargo_modified_time, cargo_modified_time_after);
+}

@@ -222,10 +222,12 @@ fn update_version(force: bool) -> Result<()> {
     }
     
     let version_info = VersionInfo::calculate()?;
-    update_version_file(&version_info, &config)?;
+    let updated = update_version_file(&version_info, &config)?;
     
-    println!("{} Updated version to: {}", "Success".green(), version_info.full_version);
-    log_action(&format!("Updated version to: {} (file: {})", version_info.full_version, config.version_file));
+    if updated {
+        println!("{} Updated version to: {}", "Success".green(), version_info.full_version);
+        log_action(&format!("Updated version to: {} (file: {})", version_info.full_version, config.version_file));
+    }
     
     Ok(())
 }
