@@ -1,0 +1,72 @@
+[[bin]]
+name = "refac"
+path = "src/bin/refac.rs"
+
+[[bin]]
+name = "scrap"
+path = "src/bin/scrap.rs"
+
+[[bin]]
+name = "unscrap"
+path = "src/bin/unscrap.rs"
+
+[[bin]]
+name = "verbump"
+path = "src/bin/verbump.rs"
+
+[dependencies]
+anyhow = "1.0"
+atty = "0.2"
+colored = "2.0"
+content_inspector = "0.2"
+dialoguer = "0.11"
+flate2 = "1.0"
+ignore = "0.4"
+indicatif = "0.17"
+rayon = "1.8"
+regex = "1.10"
+serde_json = "1.0"
+tar = "0.4"
+toml = "0.8"
+walkdir = "2.4"
+
+[dependencies.chrono]
+features = ["serde"]
+version = "0.4"
+
+[dependencies.clap]
+features = ["derive", "color"]
+version = "4.4"
+
+[dependencies.serde]
+features = ["derive"]
+version = "1.0"
+
+[dev-dependencies]
+assert_cmd = "2.0"
+predicates = "3.0"
+pretty_assertions = "1.4"
+tempfile = "3.8"
+
+[package]
+authors = ["Bahram Shamshiri <jowharshamshiri@gmail.com>"]
+categories = ["command-line-utilities", "filesystem"]
+description = "Nomion - A comprehensive tool suite for file operations, version management, and development workflow automation"
+edition = "2021"
+keywords = ["development-tools", "filesystem", "automation", "workflow"]
+license = "MIT"
+name = "nomion"
+readme = "README.md"
+repository = "https://github.com/jowharshamshiri/nomion"
+version = "0.30.18234"
+
+[profile.dev]
+debug = true
+opt-level = 0
+
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = 3
+panic = "abort"
+strip = true
