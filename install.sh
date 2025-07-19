@@ -266,48 +266,6 @@ check_path() {
     fi
 }
 
-# Create shell integration script
-create_shell_integration() {
-    local shell_script="$INSTALL_DIR/scrap-shell-integration.sh"
-    
-    cat > "$shell_script" << 'EOF'
-#!/bin/bash
-# Scrap shell integration
-# Source this file in your shell profile for enhanced scrap functionality
-
-scrap() {
-    local scrap_binary
-    
-    # Find the scrap binary
-    if command -v scrap >/dev/null 2>&1; then
-        scrap_binary="scrap"
-    elif [ -x "$HOME/.local/bin/scrap" ]; then
-        scrap_binary="$HOME/.local/bin/scrap"
-    else
-        echo "Error: scrap binary not found in PATH" >&2
-        return 1
-    fi
-    
-    # If no arguments, just run scrap (which lists contents)
-    if [ $# -eq 0 ]; then
-        "$scrap_binary"
-        return $?
-    fi
-    
-    # For other commands, pass through normally
-    "$scrap_binary" "$@"
-}
-
-# Export the function
-export -f scrap
-EOF
-
-    chmod +x "$shell_script"
-    
-    log "Created shell integration script: $shell_script"
-    log "To enable enhanced scrap functionality, add this to your shell profile:"
-    log "  source $shell_script"
-}
 
 # Main installation function
 main() {
@@ -322,7 +280,6 @@ main() {
         build_project
         install_binaries
         verify_installation
-        create_shell_integration
         check_path
         
         echo ""

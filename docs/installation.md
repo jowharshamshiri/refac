@@ -29,7 +29,6 @@ The installation script will:
 - Build all tools (`refac`, `scrap`, `unscrap`, `verbump`) in release mode
 - Install to `~/.local/bin` by default
 - Check for updates on subsequent runs
-- Create shell integration for enhanced functionality
 
 ### Installation Options
 

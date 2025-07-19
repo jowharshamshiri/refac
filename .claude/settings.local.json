@@ -3,7 +3,25 @@
     "allow": [
       "Bash(find:*)",
       "Bash(ls:*)",
-      "Bash(cargo run:*)"
+      "Bash(cargo run:*)",
+      "Bash(cargo test:*)",
+      "Bash(mkdir:*)",
+      "Bash(chmod:*)",
+      "Bash(cargo build:*)",
+      "Bash(mv:*)",
+      "Bash(cargo check:*)",
+      "Bash(./target/release/scrap --help)",
+      "Bash(./target/release/unscrap:*)",
+      "Bash(grep:*)",
+      "Bash(./test_install/scrap:*)",
+      "Bash(./test_install/unscrap:*)",
+      "Bash(./test_install/refac:*)",
+      "Bash(rm:*)",
+      "Bash(/Users/bahram/ws/prj/refac/debug_git_test.sh)",
+      "Bash(./install.sh:*)",
+      "Bash(./uninstall.sh:*)",
+      "Bash(./target/release/verbump:*)",
+      "Bash(/tmp/test_install/verbump:*)"
     ],
     "deny": []
   }
