@@ -5,7 +5,7 @@ title: Usage Guide
 
 # Usage Guide
 
-This comprehensive guide covers all aspects of using the Refac Tools suite for file operations, string replacement, and workspace management.
+This guide covers all aspects of using the Refac Tools suite for string replacement, project cleanup, and version management.
 
 ## Tools Overview
 
@@ -14,7 +14,7 @@ This comprehensive guide covers all aspects of using the Refac Tools suite for f
 refac <ROOT_DIR> <OLD_STRING> <NEW_STRING> [OPTIONS]
 ```
 
-### Scrap - File Management Tool
+### Scrap - Local Trash Tool
 ```bash
 scrap [FILE/DIR] [SUBCOMMAND] [OPTIONS]
 ```
@@ -153,7 +153,7 @@ refac ./src "oldname" "newname" \
   --exclude "*test*"
 ```
 
-## Advanced Options
+## Options
 
 ### Depth Control
 
@@ -577,7 +577,7 @@ For detailed information, see the [Verbump Tool Guide]({{ '/verbump-guide/' | re
 ### Combined Workflows
 
 ```bash
-# Complete development workflow
+# development workflow
 verbump install                               # Set up versioning
 scrap temp_* *.log build/                    # Clear workspace
 refac . "OldClass" "NewClass" --dry-run      # Preview changes
@@ -602,7 +602,7 @@ verbump status                               # Check version tracking
 
 ```bash
 #!/bin/bash
-# safe-refactor.sh - Complete refactoring workflow
+# safe-refactor.sh - refactoring workflow
 OLD="$1"
 NEW="$2"
 
@@ -645,8 +645,8 @@ fi
 
 ## Next Steps
 
-- Check the [Command Reference]({{ '/api-reference/' | relative_url }}) for complete option details
-- See [Scrap Tool Guide]({{ '/scrap-guide/' | relative_url }}) for advanced file management
+- Check the [Command Reference]({{ '/api-reference/' | relative_url }}) for option details
+- See [Scrap Tool Guide]({{ '/scrap-guide/' | relative_url }}) for file management
 - See [Unscrap Tool Guide]({{ '/unscrap-guide/' | relative_url }}) for restoration workflows
 - See [Verbump Tool Guide]({{ '/verbump-guide/' | relative_url }}) for version management setup
 - See [Examples]({{ '/examples/' | relative_url }}) for more real-world scenarios

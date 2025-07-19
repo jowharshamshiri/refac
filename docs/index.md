@@ -6,7 +6,7 @@ toc: false
 
 # Refac Tools
 
-A comprehensive suite of robust, cross-platform command-line tools for developers and system administrators. The suite includes **refac** for string replacement, **scrap** for smart file management, **unscrap** for file restoration, and **verbump** for automatic version management. Designed for safety, reliability, and performance, making them suitable for mission-critical operations and daily development workflows.
+A suite of robust, cross-platform command-line tools for developers and system administrators. The suite includes **refac** for string replacement, **scrap** for smart file management, **unscrap** for file restoration, and **verbump** for automatic version management. Designed for safety, reliability, and performance, making them suitable for mission-critical operations and daily development workflows.
 
 ## Tools Overview
 
@@ -16,11 +16,11 @@ A comprehensive suite of robust, cross-platform command-line tools for developer
 - **High Performance**: Multi-threaded processing with progress tracking
 - **Flexible Filtering**: Include/exclude patterns with glob and regex support
 
-### 🗂️ Scrap - Smart File Management
-- **Temporary Storage**: Move files to `.scrap` folder with automatic organization
-- **Metadata Tracking**: Remember original locations and timestamps
-- **Advanced Operations**: List, search, clean, archive, and restore capabilities
-- **Git Integration**: Automatic `.gitignore` management
+### 🗑️ Scrap - Local Trash Folder
+- **Project Trash**: Move unwanted files to `.scrap` folder instead of deleting
+- **Safe Deletion**: Keep old files you might need later without cluttering workspace
+- **Metadata Tracking**: Remember original locations for easy restoration
+- **Cleanup Operations**: List, search, clean old items, and archive capabilities
 
 ### ↩️ Unscrap - File Restoration
 - **Smart Recovery**: Restore files to their original locations
@@ -32,14 +32,14 @@ A comprehensive suite of robust, cross-platform command-line tools for developer
 - **Git Integration**: Automatic version bumping via git hooks
 - **Smart Versioning**: Calculate versions based on tags, commits, and changes
 - **Configuration**: Customizable version files and patterns
-- **Logging**: Comprehensive action logging for audit trails
+- **Logging**: action logging for audit trails
 
 ## Key Features
 
 - **Cross-Platform**: Works on Windows, macOS, and Linux
 - **Safety First**: Collision detection, confirmation prompts, and atomic operations
 - **Performance Optimized**: Multi-threaded processing and efficient file handling
-- **User Friendly**: Clear error messages and comprehensive help
+- **User Friendly**: Clear error messages and help
 
 ## Quick Start
 
@@ -55,21 +55,21 @@ refac . "oldname" "newname" --dry-run
 refac . "oldname" "newname" --names-only
 ```
 
-### Scrap - File Management
+### Scrap - Local Trash
 ```bash
-# Move files to .scrap folder
-scrap old_file.txt temp_directory/
+# Move unwanted files to .scrap instead of deleting
+scrap old_file.txt deprecated_feature/
 
-# List contents of .scrap folder
+# List what's in your project trash
 scrap
 
-# Search for files
+# Find specific items you scrapped
 scrap find "*.log"
 
-# Clean old items (30+ days)
+# Clean up old items (30+ days)
 scrap clean
 
-# Archive and remove all items
+# Archive old items before purging
 scrap archive --remove
 ```
 
@@ -197,8 +197,8 @@ refac ./project "oldname" "newname" --exclude "target/*" --exclude "*.log"
 ## Documentation
 
 - [Installation Guide]({{ '/installation/' | relative_url }}) - Detailed installation instructions
-- [Usage Guide]({{ '/usage/' | relative_url }}) - Comprehensive usage examples
-- [Command Reference]({{ '/api-reference/' | relative_url }}) - Complete command-line reference
+- [Usage Guide]({{ '/usage/' | relative_url }}) - usage examples
+- [Command Reference]({{ '/api-reference/' | relative_url }}) - command-line reference
 
 ## License
 

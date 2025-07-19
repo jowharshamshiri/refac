@@ -32,7 +32,7 @@ These tools are designed for safety, reliability, and performance, making them s
 - **Progress tracking**: Visual progress bars with detailed information
 - **Smart filtering**: Include/exclude patterns with glob and regex support
 
-### Advanced Options
+### Options
 
 - **Multiple operation modes**: Files-only, directories-only, names-only, content-only
 - **Output formats**: Human-readable, JSON, and plain text
@@ -51,12 +51,14 @@ cd refac
 ```
 
 The installation script will:
+
 - Build all tools in release mode
 - Install to `~/.local/bin` by default
 - Check for updates on subsequent runs
 - Create shell integration for enhanced functionality
 
 **Installation Options:**
+
 ```bash
 ./install.sh --help                    # See all options
 ./install.sh -d /usr/local/bin         # Install system-wide
@@ -65,6 +67,7 @@ The installation script will:
 ```
 
 **Uninstall:**
+
 ```bash
 ./uninstall.sh                         # Remove all tools
 ./uninstall.sh -d /usr/local/bin       # Remove from custom directory
@@ -132,7 +135,7 @@ refac . "oldname" "newname" --files-only
 refac . "oldname" "newname" --dirs-only
 ```
 
-#### Advanced Features
+#### Features
 
 ```bash
 # Force operation without confirmation
@@ -233,7 +236,7 @@ The tool checks for potential naming conflicts before making changes:
 
 ### Scrap Tool
 
-The `scrap` tool provides a comprehensive file/directory management system using a `.scrap` folder for temporary storage, with advanced features for organizing, searching, and maintaining your workspace.
+The `scrap` tool provides a file/directory management system using a `.scrap` folder for temporary storage, with features for organizing, searching, and maintaining your workspace.
 
 #### Core Features
 
@@ -257,9 +260,10 @@ scrap file.txt
 scrap old_code/
 ```
 
-#### Advanced Commands
+#### Commands
 
 ##### List and Browse
+
 ```bash
 # List contents (default when no arguments)
 scrap
@@ -272,6 +276,7 @@ scrap list --sort size
 ```
 
 ##### Search and Find
+
 ```bash
 # Search by filename (supports regex)
 scrap find ".*\.log"
@@ -282,6 +287,7 @@ scrap find "TODO" --content
 ```
 
 ##### Cleaning and Maintenance
+
 ```bash
 # Remove items older than 30 days (default)
 scrap clean
@@ -300,6 +306,7 @@ scrap purge --force
 ```
 
 ##### Archive and Backup
+
 ```bash
 # Archive .scrap contents to compressed file
 scrap archive
@@ -333,6 +340,7 @@ scrap file.txt  # Creates .scrap/file_2.txt
 #### Metadata and History
 
 The scrap tool automatically tracks:
+
 - **Original locations**: Where files came from
 - **Timestamps**: When files were scrapped
 - **Restore information**: Easy recovery to original locations
@@ -404,7 +412,7 @@ unscrap file.txt --force  # Overwrite existing file
 
 ## Error Handling
 
-The tool provides comprehensive error handling and reporting:
+The tool provides error handling and reporting:
 
 - **Input validation**: Checks for invalid arguments and paths
 - **Permission errors**: Clear messages for insufficient permissions
@@ -544,4 +552,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - Basic rename functionality
 - Safety features and collision detection
 - Multi-threading support
-- Comprehensive test suite
+- test suite

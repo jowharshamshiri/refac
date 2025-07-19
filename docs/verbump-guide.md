@@ -158,7 +158,7 @@ echo "Building version: $VERSION"
 docker build -t myapp:$VERSION .
 ```
 
-## Advanced Features
+## Features
 
 ### Custom Version Files
 
@@ -315,6 +315,6 @@ release: build
 
 ## See Also
 
-- [Installation Guide]({{ '/installation/' | relative_url }}) - Installing the complete tool suite
+- [Installation Guide]({{ '/installation/' | relative_url }}) - Installing the tool suite
 - [Getting Started]({{ '/getting-started/' | relative_url }}) - Quick start with all tools
-- [API Reference]({{ '/api-reference/' | relative_url }}) - Complete command reference
+- [API Reference]({{ '/api-reference/' | relative_url }}) - command reference

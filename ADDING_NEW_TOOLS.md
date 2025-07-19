@@ -1,6 +1,6 @@
 # Adding New Tools to Refac Tools Suite
 
-This document provides a comprehensive guide for adding new tools to the Refac Tools suite. It captures all requirements, patterns, and integration steps to ensure consistency and quality across all tools.
+This document provides a guide for adding new tools to the Refac Tools suite. It captures all requirements, patterns, and integration steps to ensure consistency and quality across all tools.
 
 ## Table of Contents
 
@@ -204,7 +204,7 @@ impl ToolMetadata {
 
 ## Testing Requirements
 
-### Comprehensive Test Coverage
+### Test Coverage
 
 Every new tool must have:
 
@@ -312,7 +312,7 @@ Add tool to the main README.md:
 1. **Tools Overview Section**: Add brief description
 2. **Installation Section**: Update with new binary name
 3. **Quick Start Section**: Add basic usage examples
-4. **New Tool Section**: Comprehensive documentation
+4. **New Tool Section**: documentation
 
 ### Dedicated Tool Guide
 
@@ -345,6 +345,7 @@ newtool basic-command
 ```
 
 ### Secondary Use Cases  
+
 ```bash
 # Additional examples
 newtool advanced-command --options
@@ -353,29 +354,37 @@ newtool advanced-command --options
 ## Advanced Features
 
 ### Feature 1
+
 Detailed explanation with examples.
 
 ### Feature 2
+
 More advanced functionality.
 
 ## Workflow Examples
 
 ### Typical Workflow
+
 Step-by-step workflow examples.
 
 ### Integration with Other Tools
+
 How it works with refac, scrap, unscrap.
 
 ## Safety Features
 
 ### What It Protects Against
+
 Explanation of safety mechanisms.
 
 ### Best Practices
+
 Recommended usage patterns.
 
 ## See Also
+
 Links to related documentation.
+
 ```
 
 ### GitHub Pages Updates
@@ -504,6 +513,7 @@ If the tool integrates with others:
 Before considering a new tool complete, verify all items:
 
 ### ✅ **Implementation**
+
 - [ ] Binary compiles without warnings
 - [ ] All CLI commands work as expected
 - [ ] Error handling is comprehensive
@@ -512,6 +522,7 @@ Before considering a new tool complete, verify all items:
 - [ ] Cross-platform compatibility verified
 
 ### ✅ **Safety**
+
 - [ ] No destructive operations without confirmation
 - [ ] Atomic operations where applicable
 - [ ] Clear error messages for all failure modes
@@ -520,6 +531,7 @@ Before considering a new tool complete, verify all items:
 - [ ] Handles edge cases gracefully
 
 ### ✅ **Testing**
+
 - [ ] Minimum 20 total tests (unit + integration)
 - [ ] All major functions have unit tests
 - [ ] All CLI options have integration tests
@@ -529,6 +541,7 @@ Before considering a new tool complete, verify all items:
 - [ ] All tests pass: `cargo test`
 
 ### ✅ **Documentation**
+
 - [ ] README.md updated with tool info
 - [ ] Dedicated tool guide created
 - [ ] Installation instructions updated
@@ -537,6 +550,7 @@ Before considering a new tool complete, verify all items:
 - [ ] Usage examples are comprehensive
 
 ### ✅ **Integration**
+
 - [ ] Installation script updated
 - [ ] Uninstallation script updated
 - [ ] Library exports updated if needed
@@ -545,6 +559,7 @@ Before considering a new tool complete, verify all items:
 - [ ] Uninstallation process tested
 
 ### ✅ **User Experience**
+
 - [ ] CLI is intuitive and consistent
 - [ ] Output is clear and actionable
 - [ ] Error messages are helpful
@@ -560,6 +575,7 @@ Before considering a new tool complete, verify all items:
 Hypothetical `backup` tool that creates timestamped backups:
 
 **Structure:**
+
 ```
 src/backup/
 ├── mod.rs
@@ -570,6 +586,7 @@ docs/backup-guide.md
 ```
 
 **CLI Design:**
+
 ```bash
 backup file.txt                    # Create backup
 backup restore file.txt.backup     # Restore backup
@@ -578,6 +595,7 @@ backup clean --days 30             # Clean old backups
 ```
 
 **Integration:**
+
 - Works with scrap: `backup . && scrap old_version/`
 - Works with refac: `backup . && refac . "old" "new"`
 

@@ -9,10 +9,10 @@ This guide will help you get up and running with the Refac Tools suite quickly. 
 
 ## What are Refac Tools?
 
-Refac Tools is a comprehensive suite of command-line utilities for developers and system administrators:
+Refac Tools is a suite of command-line utilities for developers and system administrators:
 
 - **refac**: Recursive string replacement in file names and contents
-- **scrap**: Smart temporary file management with a `.scrap` folder
+- **scrap**: Local project trash folder for unwanted files
 - **unscrap**: File restoration and undo operations  
 - **verbump**: Automatic version management via git hooks
 
@@ -59,18 +59,18 @@ refac <DIRECTORY> <OLD_STRING> <NEW_STRING> [OPTIONS]
 refac . "oldFunction" "newFunction" --dry-run
 ```
 
-### 🗂️ Scrap - File Management
+### 🗑️ Scrap - Local Trash
 
-Smart temporary storage with a `.scrap` folder:
+Project trash folder for unwanted files:
 
 ```bash
-# Move files to .scrap folder
+# Move unwanted files to .scrap instead of deleting
 scrap temp_file.txt old_directory/
 
-# List contents
+# List what's in trash
 scrap
 
-# Search and manage
+# Find and clean up
 scrap find "*.log"
 scrap clean
 ```
@@ -196,7 +196,7 @@ cat version.txt
 # 1. Start working on feature
 git checkout -b feature-branch
 
-# 2. Move temporary files out of the way
+# 2. Move unwanted files to trash instead of deleting
 scrap temp.txt debug.log old_tests/
 
 # 3. Refactor code as needed
@@ -291,7 +291,7 @@ unscrap important_file.txt
 
 ## Common Scenarios
 
-### Complete Project Refactor
+### Project Refactor
 
 ```bash
 # 1. Move build artifacts and logs out of the way
@@ -400,9 +400,9 @@ echo '{"version_file": "src/version.rs"}' > .verbump.json
 - Use version control before major changes
 
 **Scrap:**
-- Regular cleanup with `scrap clean`
-- Archive important items before purging
-- Use metadata tracking for restoration
+- Use instead of deleting files you might need later
+- Regular cleanup with `scrap clean` to remove old items
+- Archive before purging if you want long-term backup
 
 **Verbump:**
 - Install hooks early in project lifecycle
@@ -467,13 +467,13 @@ verbump status
 ### Learn More
 
 1. **Tool-Specific Guides:**
-   - [Scrap Guide]({{ '/scrap-guide/' | relative_url }}) - Advanced file management
+   - [Scrap Guide]({{ '/scrap-guide/' | relative_url }}) - file management
    - [Unscrap Guide]({{ '/unscrap-guide/' | relative_url }}) - File restoration techniques
    - [Verbump Guide]({{ '/verbump-guide/' | relative_url }}) - Version management setup
 
-2. **Comprehensive Resources:**
+2. **Resources:**
    - [Usage Guide]({{ '/usage/' | relative_url }}) - Detailed examples for all tools
-   - [API Reference]({{ '/api-reference/' | relative_url }}) - Complete command documentation
+   - [API Reference]({{ '/api-reference/' | relative_url }}) - command documentation
    - [Examples]({{ '/examples/' | relative_url }}) - Real-world scenarios
 
 ### Quick Reference Card

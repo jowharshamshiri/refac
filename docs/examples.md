@@ -5,9 +5,9 @@ title: Examples
 
 # Real-World Examples
 
-Learn how to use the Refac Tools suite through practical examples for common development workflows, combining refactoring, file management, and version control.
+Learn how to use the Refac Tools suite through practical examples for common development workflows, combining refactoring, project cleanup, and version control.
 
-## Complete Development Workflows
+## Development Workflows
 
 ### Project Refactoring with Version Tracking
 
@@ -18,7 +18,7 @@ Learn how to use the Refac Tools suite through practical examples for common dev
 verbump install
 git tag v1.0  # Mark current state
 
-# 2. Clean workspace
+# 2. Move unwanted files to trash
 scrap temp_files/ debug_logs/ old_tests/
 
 # 3. Preview and apply refactoring
@@ -87,42 +87,42 @@ echo "Tagged release: v$NEW_VERSION"
 
 ## Individual Tool Examples
 
-### Scrap - File Management
+### Scrap - Local Trash Folder
 
-#### Development Workspace Cleanup
+#### Project Cleanup Instead of Deletion
 
-**Scenario**: Clean up temporary files and build artifacts during development.
+**Scenario**: Cleaning up files you don't want but might need later.
 
 ```bash
-# Move temporary files to .scrap
+# Move unwanted files to .scrap instead of deleting
 scrap *.tmp *.log build/ target/debug/
 
-# List what's been scrapped
+# List what you've scrapped
 scrap list --sort size
 
-# Find specific patterns
+# Find specific items you remember scrapping
 scrap find "*.log"
-scrap find "test" --content  # Search file contents
+scrap find "test" --content  # Search in file contents
 
-# Clean up old items (older than 7 days)
+# Clean up old items (older than 7 days) permanently
 scrap clean --days 7 --dry-run
 scrap clean --days 7
 ```
 
-#### Project Archive Management
+#### Safe Code Cleanup
 
-**Scenario**: Managing old versions and experimental code.
+**Scenario**: Removing old implementations and experimental code safely.
 
 ```bash
-# Archive old implementation before refactoring
+# Scrap old code instead of deleting (in case you need it)
 scrap old_implementation/ legacy_tests/
 
-# Create timestamped archives
-scrap archive "backup-$(date +%Y%m%d).tar.gz"
+# Archive before permanent removal
+scrap archive "old-code-$(date +%Y%m%d).tar.gz"
 
-# Move items and archive in one step
+# Scrap experimental features that didn't work out
 scrap experimental_feature/ prototype/
-scrap archive --output experiments-2024.tar.gz --remove
+scrap archive --output experiments-archive.tar.gz --remove
 ```
 
 ### Unscrap - File Restoration
@@ -417,7 +417,7 @@ refac ./project "old_column_name" "new_column_name" \
   --include "*.js"
 ```
 
-## Advanced Patterns
+## Patterns
 
 ### Using Regular Expressions
 
@@ -729,7 +729,7 @@ refac . "oldname" "newname" \
 
 ---
 
-## Complete Tool Suite Workflows
+## Tool Suite Workflows
 
 ### Full-Stack Application Refactoring
 
@@ -743,7 +743,7 @@ PROJECT_NAME="$1"
 OLD_NAME="$2"
 NEW_NAME="$3"
 
-echo "=== Starting Complete Refactoring Workflow ==="
+echo "=== Starting Refactoring Workflow ==="
 echo "Project: $PROJECT_NAME"
 echo "Refactor: $OLD_NAME -> $NEW_NAME"
 
@@ -922,4 +922,4 @@ echo "Release pipeline complete!"
 echo "Artifact: releases/app-v$RELEASE_VERSION.tar.gz"
 ```
 
-These comprehensive examples demonstrate how the Refac Tools suite provides a complete solution for development workflow management, combining safe refactoring, intelligent file management, and automatic version tracking.
+These examples demonstrate how the Refac Tools suite provides a solution for development workflow management, combining safe refactoring, intelligent file management, and automatic version tracking.

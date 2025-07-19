@@ -279,7 +279,7 @@ If you encounter issues:
 3. Create a [new issue](https://github.com/jowharshamshiri/refac/issues/new) with:
    - Your operating system and version
    - Rust version (`rustc --version`)
-   - Complete error message
+   - error message
    - Steps to reproduce
 
 ## Next Steps
@@ -287,5 +287,5 @@ If you encounter issues:
 Once installed, check out:
 
 - [Usage Guide]({{ '/usage/' | relative_url }}) - Learn how to use Refac effectively
-- [Command Reference]({{ '/api-reference/' | relative_url }}) - Complete command documentation
+- [Command Reference]({{ '/api-reference/' | relative_url }}) - command documentation
 - [Examples]({{ '/examples/' | relative_url }}) - Real-world usage examples

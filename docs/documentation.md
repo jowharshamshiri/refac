@@ -22,7 +22,7 @@ Refac supports several operation modes:
 - **Dry-run Mode**: Preview changes before applying
 - **Backup System**: Optional pre-modification backups
 
-### 3. Advanced Matching
+### 3. Matching
 
 ```bash
 # Case-insensitive matching

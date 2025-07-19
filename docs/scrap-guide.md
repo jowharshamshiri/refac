@@ -5,7 +5,7 @@ title: Scrap Tool Guide
 
 # Scrap Tool Guide
 
-The `scrap` tool provides comprehensive file and directory management using a `.scrap` folder for temporary storage. It's designed to help you organize your workspace by temporarily moving files you don't need immediately, with the ability to easily restore them later.
+The `scrap` tool provides file and directory management using a `.scrap` folder for temporary storage. It's designed to help you organize your workspace by temporarily moving files you don't need immediately, with the ability to easily restore them later.
 
 ## Core Concepts
 
@@ -63,7 +63,7 @@ Contents of .scrap folder:
 📄 debug.txt              524 B   3 hours ago     from: /home/user/debug.txt
 ```
 
-## Advanced Features
+## Features
 
 ### Search and Find
 
@@ -249,4 +249,4 @@ fi
 
 - [Unscrap Tool Guide]({{ '/unscrap-guide/' | relative_url }}) - Restoring files from .scrap
 - [Installation Guide]({{ '/installation/' | relative_url }}) - Setting up the tools
-- [API Reference]({{ '/api-reference/' | relative_url }}) - Complete command reference
+- [API Reference]({{ '/api-reference/' | relative_url }}) - command reference

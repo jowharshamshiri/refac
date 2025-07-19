@@ -1,9 +1,9 @@
 # Site settings
 title: Refac Tools - Command-Line Tool Suite
 description: >-
-  A comprehensive suite of command-line tools for file management, string replacement, 
-  temporary storage, and version control. Includes refac (string replacement), 
-  scrap (smart file management), unscrap (file restoration), and verbump (automatic versioning).
+  A suite of command-line tools for string replacement, project cleanup, 
+  and version control. Includes refac (string replacement), scrap (local trash folder), 
+  unscrap (file restoration), and verbump (automatic versioning).
 author: Bahram Shamshiri
 email: jowharshamshiri@gmail.com
 baseurl: "/refac"

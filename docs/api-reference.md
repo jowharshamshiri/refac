@@ -5,7 +5,7 @@ title: Command Reference
 
 # Command Reference
 
-Complete reference for all Refac Tools command-line options and usage patterns.
+reference for all Refac Tools command-line options and usage patterns.
 
 ## Tools Overview
 
@@ -16,7 +16,7 @@ The Refac Tools suite includes four command-line utilities:
 refac <ROOT_DIR> <OLD_STRING> <NEW_STRING> [OPTIONS]
 ```
 
-### Scrap - File Management
+### Scrap - Local Trash
 ```bash
 scrap [PATH...] [SUBCOMMAND] [OPTIONS]
 ```
@@ -315,7 +315,7 @@ refac ./config "old.server.com" "new.server.com" --content-only
 refac . "oldname" "newname" --files-only
 ```
 
-### Advanced Options
+### Options
 
 ```bash
 # Limit search depth
@@ -414,7 +414,7 @@ scrap [PATH...] [SUBCOMMAND] [OPTIONS]
 
 ### Basic Operations
 ```bash
-# Move files/directories to .scrap folder
+# Move unwanted files to .scrap trash folder
 scrap file.txt directory/
 
 # List .scrap contents (default when no args)
@@ -434,12 +434,12 @@ scrap list [--sort name|date|size]
 
 ### Examples
 ```bash
-scrap temp.txt logs/                    # Move to .scrap
-scrap list --sort size                  # List by size
-scrap find "*.log"                      # Find log files
-scrap clean --days 30                   # Remove old items
+scrap temp.txt logs/                    # Move to trash
+scrap list --sort size                  # List trash contents
+scrap find "*.log"                      # Find log files in trash
+scrap clean --days 30                   # Permanently remove old items
 scrap archive backup.tar.gz --remove   # Archive and remove
-scrap purge --force                     # Remove everything
+scrap purge --force                     # Empty trash completely
 ```
 
 ---
@@ -548,6 +548,6 @@ verbump --version
 
 For more information:
 - [Getting Started]({{ '/getting-started/' | relative_url }}) - Quick start guide
-- [Usage Guide]({{ '/usage/' | relative_url }}) - Comprehensive usage examples
+- [Usage Guide]({{ '/usage/' | relative_url }}) - usage examples
 - [Tool-Specific Guides]({{ '/scrap-guide/' | relative_url }}) - Individual tool documentation
 - [GitHub Issues](https://github.com/jowharshamshiri/refac/issues) - Report bugs or request features
