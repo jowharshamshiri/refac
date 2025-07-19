@@ -185,11 +185,17 @@ mod tests {
         let scrapped_file = scrap_dir.join("test.txt");
         fs::write(&scrapped_file, "content").unwrap();
         
-        // Restore should put it in current directory
+        // Change to temp directory and restore
+        let original_dir = env::current_dir().unwrap();
         env::set_current_dir(temp_dir.path()).unwrap();
+        
+        // Restore should put it in current directory
         restore_item(&scrap_dir, "test.txt", None, false).unwrap();
         
-        // Check file was restored to current directory
+        // Restore original directory
+        env::set_current_dir(original_dir).unwrap();
+        
+        // Check file was restored to temp directory (which was current dir during restore)
         let restored = temp_dir.path().join("test.txt");
         assert!(restored.exists());
         assert_eq!(fs::read_to_string(&restored).unwrap(), "content");

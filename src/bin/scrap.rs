@@ -17,8 +17,8 @@ use tar::Builder;
 #[command(about = "Smart file/directory management with a .scrap folder")]
 #[command(version = "0.1.0")]
 struct Args {
-    /// Path to file or directory to move to .scrap folder
-    path: Option<PathBuf>,
+    /// Paths to files or directories to move to .scrap folder
+    paths: Vec<PathBuf>,
 
     #[command(subcommand)]
     command: Option<Commands>,
@@ -101,14 +101,13 @@ fn run() -> Result<()> {
         Some(Commands::Find { pattern, content }) => find_in_scrap(&scrap_dir, &pattern, content)?,
         Some(Commands::Archive { output, remove }) => archive_scrap_folder(&scrap_dir, output, remove)?,
         None => {
-            match args.path {
-                Some(path) => {
-                    // Move the specified file/directory to .scrap
-                    move_to_scrap(&path, &scrap_dir, &current_dir)?;
-                }
-                None => {
-                    // No args - list contents with default sort
-                    list_scrap_contents(&scrap_dir, "date")?;
+            if args.paths.is_empty() {
+                // No args - list contents with default sort
+                list_scrap_contents(&scrap_dir, "date")?;
+            } else {
+                // Move the specified files/directories to .scrap
+                for path in &args.paths {
+                    move_to_scrap(path, &scrap_dir, &current_dir)?;
                 }
             }
         }
@@ -680,5 +679,119 @@ mod tests {
         assert_eq!(format_size(1536), "1.5 KB");
         assert_eq!(format_size(1048576), "1.0 MB");
         assert_eq!(format_size(1073741824), "1.0 GB");
+    }
+    
+    #[test]
+    fn test_move_single_file_to_scrap() {
+        let temp_dir = TempDir::new().unwrap();
+        let scrap_dir = temp_dir.path().join(".scrap");
+        create_scrap_directory(&scrap_dir).unwrap();
+        
+        // Create a test file
+        let test_file = temp_dir.path().join("test.txt");
+        fs::write(&test_file, "test content").unwrap();
+        
+        // Move to scrap
+        move_to_scrap(&test_file, &scrap_dir, temp_dir.path()).unwrap();
+        
+        // Check file was moved
+        assert!(!test_file.exists());
+        assert!(scrap_dir.join("test.txt").exists());
+        
+        // Check metadata was created
+        let metadata = ScrapMetadata::load(&scrap_dir).unwrap();
+        assert!(metadata.get_entry("test.txt").is_some());
+    }
+    
+    #[test]
+    fn test_move_multiple_files_to_scrap() {
+        let temp_dir = TempDir::new().unwrap();
+        let scrap_dir = temp_dir.path().join(".scrap");
+        create_scrap_directory(&scrap_dir).unwrap();
+        
+        // Create multiple test files
+        let file1 = temp_dir.path().join("file1.txt");
+        let file2 = temp_dir.path().join("file2.txt");
+        let file3 = temp_dir.path().join("file3.txt");
+        
+        fs::write(&file1, "content1").unwrap();
+        fs::write(&file2, "content2").unwrap();
+        fs::write(&file3, "content3").unwrap();
+        
+        let files = vec![file1.clone(), file2.clone(), file3.clone()];
+        
+        // Move all files to scrap
+        for file in &files {
+            move_to_scrap(file, &scrap_dir, temp_dir.path()).unwrap();
+        }
+        
+        // Check all files were moved
+        assert!(!file1.exists());
+        assert!(!file2.exists());
+        assert!(!file3.exists());
+        
+        assert!(scrap_dir.join("file1.txt").exists());
+        assert!(scrap_dir.join("file2.txt").exists());
+        assert!(scrap_dir.join("file3.txt").exists());
+        
+        // Check metadata was created for all files
+        let metadata = ScrapMetadata::load(&scrap_dir).unwrap();
+        assert!(metadata.get_entry("file1.txt").is_some());
+        assert!(metadata.get_entry("file2.txt").is_some());
+        assert!(metadata.get_entry("file3.txt").is_some());
+        assert_eq!(metadata.entries.len(), 3);
+    }
+    
+    #[test]
+    fn test_move_directory_to_scrap() {
+        let temp_dir = TempDir::new().unwrap();
+        let scrap_dir = temp_dir.path().join(".scrap");
+        create_scrap_directory(&scrap_dir).unwrap();
+        
+        // Create a test directory with files
+        let test_dir = temp_dir.path().join("testdir");
+        fs::create_dir(&test_dir).unwrap();
+        fs::write(test_dir.join("file1.txt"), "content1").unwrap();
+        fs::write(test_dir.join("file2.txt"), "content2").unwrap();
+        
+        // Move directory to scrap
+        move_to_scrap(&test_dir, &scrap_dir, temp_dir.path()).unwrap();
+        
+        // Check directory was moved
+        assert!(!test_dir.exists());
+        let scrapped_dir = scrap_dir.join("testdir");
+        assert!(scrapped_dir.exists());
+        assert!(scrapped_dir.is_dir());
+        assert!(scrapped_dir.join("file1.txt").exists());
+        assert!(scrapped_dir.join("file2.txt").exists());
+        
+        // Check metadata was created
+        let metadata = ScrapMetadata::load(&scrap_dir).unwrap();
+        assert!(metadata.get_entry("testdir").is_some());
+    }
+    
+    #[test]
+    fn test_naming_conflicts() {
+        let temp_dir = TempDir::new().unwrap();
+        let scrap_dir = temp_dir.path().join(".scrap");
+        create_scrap_directory(&scrap_dir).unwrap();
+        
+        // Create original file in scrap
+        fs::write(scrap_dir.join("test.txt"), "original").unwrap();
+        
+        // Create new file with same name
+        let new_file = temp_dir.path().join("test.txt");
+        fs::write(&new_file, "new content").unwrap();
+        
+        // Move to scrap - should create test_1.txt
+        move_to_scrap(&new_file, &scrap_dir, temp_dir.path()).unwrap();
+        
+        // Check both files exist
+        assert!(scrap_dir.join("test.txt").exists());
+        assert!(scrap_dir.join("test_1.txt").exists());
+        
+        // Check contents are different
+        assert_eq!(fs::read_to_string(scrap_dir.join("test.txt")).unwrap(), "original");
+        assert_eq!(fs::read_to_string(scrap_dir.join("test_1.txt")).unwrap(), "new content");
     }
 }
