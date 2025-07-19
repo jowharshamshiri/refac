@@ -68,6 +68,8 @@ Create a `.verbump.json` configuration file in your repository root:
 **Configuration Options:**
 - `enabled`: Enable/disable automatic version updates
 - `version_file`: Path to the file where version should be written (default: `version.txt`)
+- `auto_detect_project_files`: Automatically detect and update common project files (default: `true`)
+- `project_files`: Array of additional project files to update (relative to repository root)
 
 ## Basic Usage
 
@@ -119,6 +121,10 @@ Verbump Status:
   Version File: version.txt
   Current Version: 1.2.3.156
   Version File Exists: ✓
+  Auto-detect Project Files: ✓
+  Detected Project Files: 
+    • /path/to/repo/Cargo.toml (Cargo.toml)
+    • /path/to/repo/package.json (package.json)
 ```
 
 ### Uninstall Hook
@@ -133,8 +139,10 @@ verbump uninstall
 
 1. Install the git hook once: `verbump install`
 2. Work normally - commit as usual
-3. Version file is automatically updated before each commit
-4. Version file changes are automatically staged
+3. Version files are automatically updated before each commit:
+   - `version.txt` (or custom version file)
+   - All detected project files (Cargo.toml, package.json, etc.)
+4. All version file changes are automatically staged
 
 ### Manual Mode
 
@@ -159,6 +167,45 @@ docker build -t myapp:$VERSION .
 ```
 
 ## Features
+
+### Project File Auto-Detection
+
+Verbump automatically detects and updates version fields in common project configuration files:
+
+**Supported File Types:**
+- **Cargo.toml** (Rust): `version = "x.y.z"` in `[package]` section
+- **package.json** (Node.js): `"version": "x.y.z"`
+- **pyproject.toml** (Python): `version = "x.y.z"` in `[tool.poetry]` and `[project]` sections
+- **setup.py** (Python): `version="x.y.z"` parameter
+- **composer.json** (PHP): `"version": "x.y.z"`
+- **pubspec.yaml** (Dart/Flutter): `version: x.y.z`
+- **pom.xml** (Maven/Java): `<version>x.y.z</version>`
+- **build.gradle** (Gradle): `version = 'x.y.z'`
+- **CMakeLists.txt** (C/C++): `VERSION x.y.z` in `project()` declaration
+
+**Configuration Example:**
+```json
+{
+  "version": 1,
+  "enabled": true,
+  "version_file": "version.txt",
+  "auto_detect_project_files": true,
+  "project_files": ["custom-config.json", "VERSION"]
+}
+```
+
+**How It Works:**
+1. When `auto_detect_project_files` is `true` (default), verbump scans the repository root for supported project files
+2. Each detected file is automatically updated with the new version
+3. Files specified in `project_files` are also updated (if they exist and verbump can detect their type)
+4. All updated files are automatically staged in git
+
+**Disable Auto-Detection:**
+```json
+{
+  "auto_detect_project_files": false
+}
+```
 
 ### Custom Version Files
 
@@ -276,6 +323,40 @@ Log format:
 5. **Backup Hooks**: Document verbump usage for team members
 
 ## Integration Examples
+
+### Multi-Language Project
+
+For projects using multiple technologies:
+
+```bash
+# Project structure:
+# ├── Cargo.toml          (Rust backend)
+# ├── package.json        (Node.js frontend)
+# ├── pyproject.toml      (Python scripts)
+# └── .verbump.json
+
+# Verbump automatically updates all three files:
+git commit -m "Add new feature"
+# → Cargo.toml version updated to 1.2.5.234
+# → package.json version updated to 1.2.5.234  
+# → pyproject.toml version updated to 1.2.5.234
+```
+
+### Monorepo with Custom Files
+
+```json
+{
+  "version": 1,
+  "enabled": true,
+  "version_file": "VERSION",
+  "auto_detect_project_files": true,
+  "project_files": [
+    "apps/web/package.json",
+    "services/api/Cargo.toml",
+    "docs/conf.py"
+  ]
+}
+```
 
 ### Docker Build
 ```dockerfile

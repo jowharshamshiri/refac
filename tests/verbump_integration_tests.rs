@@ -466,3 +466,246 @@ fn test_verbump_logging() {
     assert!(log_content.contains("Created new pre-commit hook") || 
            log_content.contains("Updated existing pre-commit hook"));
 }
+
+#[test]
+fn test_verbump_auto_detect_cargo_toml() {
+    let temp_dir = TempDir::new().unwrap();
+    setup_git_repo(temp_dir.path()).unwrap();
+    create_test_commits(temp_dir.path(), 1).unwrap();
+    
+    // Create a Cargo.toml file
+    let cargo_content = r#"[package]
+name = "test-project"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+serde = "1.0"
+"#;
+    fs::write(temp_dir.path().join("Cargo.toml"), cargo_content).unwrap();
+    
+    // Run verbump update
+    Command::cargo_bin("verbump")
+        .unwrap()
+        .arg("update")
+        .arg("--force")
+        .current_dir(temp_dir.path())
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("Updated version to"))
+        .stdout(predicate::str::contains("Updated project files"));
+    
+    // Check that Cargo.toml was updated
+    let updated_cargo = fs::read_to_string(temp_dir.path().join("Cargo.toml")).unwrap();
+    assert!(updated_cargo.contains("name = \"test-project\""));
+    assert!(!updated_cargo.contains("version = \"0.1.0\""));
+    
+    // Should contain new version format (something like "0.1.x.y")
+    assert!(updated_cargo.contains("version = \"0."));
+}
+
+#[test]
+fn test_verbump_auto_detect_package_json() {
+    let temp_dir = TempDir::new().unwrap();
+    setup_git_repo(temp_dir.path()).unwrap();
+    create_test_commits(temp_dir.path(), 2).unwrap();
+    
+    // Create a package.json file
+    let package_content = r#"{
+  "name": "test-package",
+  "version": "1.0.0",
+  "description": "A test package",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}"#;
+    fs::write(temp_dir.path().join("package.json"), package_content).unwrap();
+    
+    // Run verbump update
+    Command::cargo_bin("verbump")
+        .unwrap()
+        .arg("update")
+        .arg("--force")
+        .current_dir(temp_dir.path())
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("Updated project files"));
+    
+    // Check that package.json was updated
+    let updated_package = fs::read_to_string(temp_dir.path().join("package.json")).unwrap();
+    let parsed: serde_json::Value = serde_json::from_str(&updated_package).unwrap();
+    
+    assert_eq!(parsed["name"], "test-package");
+    assert_ne!(parsed["version"], "1.0.0"); // Should be updated
+    
+    // Should be in format "0.X.Y" where X >= 2 (we created 2 additional commits)
+    let version_str = parsed["version"].as_str().unwrap();
+    let parts: Vec<&str> = version_str.split('.').collect();
+    assert_eq!(parts.len(), 3);
+    let minor_version: u32 = parts[1].parse().unwrap();
+    assert!(minor_version >= 2);
+}
+
+#[test]
+fn test_verbump_auto_detect_multiple_files() {
+    let temp_dir = TempDir::new().unwrap();
+    setup_git_repo(temp_dir.path()).unwrap();
+    create_test_commits(temp_dir.path(), 1).unwrap();
+    
+    // Create multiple project files
+    let cargo_content = r#"[package]
+name = "multi-test"
+version = "0.5.0"
+"#;
+    fs::write(temp_dir.path().join("Cargo.toml"), cargo_content).unwrap();
+    
+    let package_content = r#"{
+  "name": "multi-test",
+  "version": "0.5.0"
+}"#;
+    fs::write(temp_dir.path().join("package.json"), package_content).unwrap();
+    
+    let pyproject_content = r#"[tool.poetry]
+name = "multi-test"
+version = "0.5.0"
+
+[project]
+name = "multi-test"
+version = "0.5.0"
+"#;
+    fs::write(temp_dir.path().join("pyproject.toml"), pyproject_content).unwrap();
+    
+    // Run verbump update
+    Command::cargo_bin("verbump")
+        .unwrap()
+        .arg("update")
+        .arg("--force")
+        .current_dir(temp_dir.path())
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("Updated project files"));
+    
+    // Check that all files were updated with the same version
+    let version_file_content = fs::read_to_string(temp_dir.path().join("version.txt")).unwrap();
+    let new_version = version_file_content.trim();
+    
+    // Check Cargo.toml
+    let updated_cargo = fs::read_to_string(temp_dir.path().join("Cargo.toml")).unwrap();
+    assert!(updated_cargo.contains(&format!("version = \"{}\"", new_version)));
+    
+    // Check package.json
+    let updated_package = fs::read_to_string(temp_dir.path().join("package.json")).unwrap();
+    let parsed: serde_json::Value = serde_json::from_str(&updated_package).unwrap();
+    assert_eq!(parsed["version"], new_version);
+    
+    // Check pyproject.toml
+    let updated_pyproject = fs::read_to_string(temp_dir.path().join("pyproject.toml")).unwrap();
+    assert!(updated_pyproject.contains(&format!("version = \"{}\"", new_version)));
+    // Should appear twice (in tool.poetry and project sections)
+    assert_eq!(updated_pyproject.matches(&format!("version = \"{}\"", new_version)).count(), 2);
+}
+
+#[test]
+fn test_verbump_status_shows_detected_files() {
+    let temp_dir = TempDir::new().unwrap();
+    setup_git_repo(temp_dir.path()).unwrap();
+    
+    // Create project files
+    fs::write(temp_dir.path().join("Cargo.toml"), "[package]\nname = \"test\"\nversion = \"0.1.0\"").unwrap();
+    fs::write(temp_dir.path().join("package.json"), "{\"name\": \"test\", \"version\": \"1.0.0\"}").unwrap();
+    
+    Command::cargo_bin("verbump")
+        .unwrap()
+        .arg("status")
+        .current_dir(temp_dir.path())
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("Auto-detect Project Files: ✓"))
+        .stdout(predicate::str::contains("Detected Project Files:"))
+        .stdout(predicate::str::contains("Cargo.toml"))
+        .stdout(predicate::str::contains("package.json"));
+}
+
+#[test]
+fn test_verbump_config_disable_auto_detect() {
+    let temp_dir = TempDir::new().unwrap();
+    setup_git_repo(temp_dir.path()).unwrap();
+    create_test_commits(temp_dir.path(), 1).unwrap();
+    
+    // Create config with auto-detect disabled
+    let config_content = r#"{
+  "version": 1,
+  "enabled": true,
+  "version_file": "version.txt",
+  "auto_detect_project_files": false
+}"#;
+    fs::write(temp_dir.path().join(".verbump.json"), config_content).unwrap();
+    
+    // Create a Cargo.toml file
+    let cargo_content = r#"[package]
+name = "no-auto-detect"
+version = "0.1.0"
+"#;
+    fs::write(temp_dir.path().join("Cargo.toml"), cargo_content).unwrap();
+    
+    // Run verbump update
+    Command::cargo_bin("verbump")
+        .unwrap()
+        .arg("update")
+        .arg("--force")
+        .current_dir(temp_dir.path())
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("Updated version to"))
+        .stdout(predicate::str::contains("Updated project files").not());
+    
+    // Check that Cargo.toml was NOT updated (still has old version)
+    let updated_cargo = fs::read_to_string(temp_dir.path().join("Cargo.toml")).unwrap();
+    assert!(updated_cargo.contains("version = \"0.1.0\""));
+    
+    // But version.txt should be updated
+    let version_file = temp_dir.path().join("version.txt");
+    assert!(version_file.exists());
+    let version_content = fs::read_to_string(&version_file).unwrap();
+    assert_ne!(version_content.trim(), "0.1.0");
+}
+
+#[test]
+fn test_verbump_manual_project_files() {
+    let temp_dir = TempDir::new().unwrap();
+    setup_git_repo(temp_dir.path()).unwrap();
+    create_test_commits(temp_dir.path(), 1).unwrap();
+    
+    // Create config with manual project files
+    let config_content = r#"{
+  "version": 1,
+  "enabled": true,
+  "version_file": "version.txt",
+  "auto_detect_project_files": false,
+  "project_files": ["custom.json", "Cargo.toml"]
+}"#;
+    fs::write(temp_dir.path().join(".verbump.json"), config_content).unwrap();
+    
+    // Create the specified files
+    fs::write(temp_dir.path().join("custom.json"), "{\"version\": \"1.0.0\"}").unwrap();
+    fs::write(temp_dir.path().join("Cargo.toml"), "[package]\nname = \"manual\"\nversion = \"1.0.0\"").unwrap();
+    
+    // Run verbump update
+    Command::cargo_bin("verbump")
+        .unwrap()
+        .arg("update")
+        .arg("--force")
+        .current_dir(temp_dir.path())
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("Updated configured project files"));
+    
+    // Check that both files were updated
+    let updated_custom = fs::read_to_string(temp_dir.path().join("custom.json")).unwrap();
+    let custom_parsed: serde_json::Value = serde_json::from_str(&updated_custom).unwrap();
+    assert_ne!(custom_parsed["version"], "1.0.0");
+    
+    let updated_cargo = fs::read_to_string(temp_dir.path().join("Cargo.toml")).unwrap();
+    assert!(!updated_cargo.contains("version = \"1.0.0\""));
+}

@@ -1,7 +1,7 @@
 use anyhow::{Context, Result};
 use clap::{Parser, Subcommand};
 use colored::Colorize;
-use refac::verbump::{VerbumpConfig, VersionInfo};
+use refac::verbump::{VerbumpConfig, VersionInfo, detect_project_files, update_version_file};
 use std::env;
 use std::fs::{self, OpenOptions};
 use std::io::Write;
@@ -256,6 +256,42 @@ fn show_status() -> Result<()> {
     println!("  {}: {}", "Version File Exists".cyan(),
         if version_file_path.exists() { "✓".green() } else { "✗".red() });
     
+    // Show auto-detection status
+    println!("  {}: {}", "Auto-detect Project Files".cyan(),
+        if config.auto_detect_project_files { "✓".green() } else { "✗".red() });
+    
+    // Show detected project files
+    if config.auto_detect_project_files {
+        match detect_project_files(&git_root) {
+            Ok(project_files) => {
+                if !project_files.is_empty() {
+                    println!("  {}: ", "Detected Project Files".cyan());
+                    for project_file in &project_files {
+                        println!("    • {} ({})", 
+                            project_file.path.display(),
+                            project_file.file_type.file_name());
+                    }
+                } else {
+                    println!("  {}: {}", "Detected Project Files".cyan(), "None".yellow());
+                }
+            }
+            Err(e) => {
+                println!("  {}: {} ({})", "Detected Project Files".cyan(), "Error".red(), e);
+            }
+        }
+    }
+    
+    // Show manually configured project files
+    if !config.project_files.is_empty() {
+        println!("  {}: ", "Configured Project Files".cyan());
+        for file_path in &config.project_files {
+            let full_path = git_root.join(file_path);
+            println!("    • {} ({})", 
+                file_path,
+                if full_path.exists() { "✓".green() } else { "✗".red() });
+        }
+    }
+    
     Ok(())
 }
 
@@ -347,25 +383,6 @@ fn get_git_root() -> Result<PathBuf> {
     Ok(PathBuf::from(root))
 }
 
-fn update_version_file(version_info: &VersionInfo, config: &VerbumpConfig) -> Result<()> {
-    let version_file_path = PathBuf::from(&config.version_file);
-    
-    fs::write(&version_file_path, format!("{}\n", version_info.full_version))
-        .with_context(|| format!("Failed to write version to {}", version_file_path.display()))?;
-
-    // Stage the version file
-    let output = Command::new("git")
-        .args(["add", version_file_path.to_str().unwrap()])
-        .output()
-        .context("Failed to stage version file")?;
-
-    if !output.status.success() {
-        let stderr = String::from_utf8_lossy(&output.stderr);
-        anyhow::bail!("Failed to stage version file: {}", stderr);
-    }
-
-    Ok(())
-}
 
 #[cfg(test)]
 mod tests {
