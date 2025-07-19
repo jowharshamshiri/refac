@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Refac Tools Installation Script
-# This script builds and installs all refac tools (refac, scrap, unscrap)
+# This script builds and installs all refac tools (refac, scrap, unscrap, verbump)
 # Multiple runs will update to the latest version
 
 set -e  # Exit on any error
@@ -24,7 +24,7 @@ VERBOSE=false
 usage() {
     echo "Usage: $0 [OPTIONS]"
     echo ""
-    echo "Install Refac Tools (refac, scrap, unscrap)"
+    echo "Install Refac Tools (refac, scrap, unscrap, verbump)"
     echo ""
     echo "OPTIONS:"
     echo "  -d, --dir DIR        Installation directory (default: $DEFAULT_INSTALL_DIR)"
@@ -140,6 +140,7 @@ get_installed_versions() {
     REFAC_VERSION=""
     SCRAP_VERSION=""
     UNSCRAP_VERSION=""
+    VERBUMP_VERSION=""
     
     if command -v refac &> /dev/null; then
         REFAC_VERSION=$(refac --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' || echo "unknown")
@@ -151,6 +152,10 @@ get_installed_versions() {
     
     if command -v unscrap &> /dev/null; then
         UNSCRAP_VERSION=$(unscrap --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' || echo "unknown")
+    fi
+    
+    if command -v verbump &> /dev/null; then
+        VERBUMP_VERSION=$(verbump --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' || echo "unknown")
     fi
 }
 
@@ -170,14 +175,15 @@ check_installation_needed() {
     if [ "$FORCE_INSTALL" = true ]; then
         log "Force installation requested"
         needs_install=true
-    elif [ -z "$REFAC_VERSION" ] || [ -z "$SCRAP_VERSION" ] || [ -z "$UNSCRAP_VERSION" ]; then
+    elif [ -z "$REFAC_VERSION" ] || [ -z "$SCRAP_VERSION" ] || [ -z "$UNSCRAP_VERSION" ] || [ -z "$VERBUMP_VERSION" ]; then
         log "Some tools are not installed"
         needs_install=true
-    elif [ "$REFAC_VERSION" != "$PROJECT_VERSION" ] || [ "$SCRAP_VERSION" != "$PROJECT_VERSION" ] || [ "$UNSCRAP_VERSION" != "$PROJECT_VERSION" ]; then
+    elif [ "$REFAC_VERSION" != "$PROJECT_VERSION" ] || [ "$SCRAP_VERSION" != "$PROJECT_VERSION" ] || [ "$UNSCRAP_VERSION" != "$PROJECT_VERSION" ] || [ "$VERBUMP_VERSION" != "$PROJECT_VERSION" ]; then
         log "Installed versions differ from project version"
         log "  refac: $REFAC_VERSION -> $PROJECT_VERSION"
         log "  scrap: $SCRAP_VERSION -> $PROJECT_VERSION"
         log "  unscrap: $UNSCRAP_VERSION -> $PROJECT_VERSION"
+        log "  verbump: $VERBUMP_VERSION -> $PROJECT_VERSION"
         needs_install=true
     else
         success "All tools are already up to date (version $PROJECT_VERSION)"
@@ -198,7 +204,7 @@ build_project() {
     fi
     
     # Verify all binaries were built
-    local binaries=("refac" "scrap" "unscrap")
+    local binaries=("refac" "scrap" "unscrap" "verbump")
     for binary in "${binaries[@]}"; do
         if [ ! -f "target/release/$binary" ]; then
             error "Failed to build $binary"
@@ -213,7 +219,7 @@ build_project() {
 install_binaries() {
     log "Installing binaries to $INSTALL_DIR"
     
-    local binaries=("refac" "scrap" "unscrap")
+    local binaries=("refac" "scrap" "unscrap" "verbump")
     for binary in "${binaries[@]}"; do
         verbose_log "Installing $binary..."
         cp "target/release/$binary" "$INSTALL_DIR/"
@@ -227,7 +233,7 @@ install_binaries() {
 verify_installation() {
     log "Verifying installation..."
     
-    local binaries=("refac" "scrap" "unscrap")
+    local binaries=("refac" "scrap" "unscrap" "verbump")
     local all_good=true
     
     for binary in "${binaries[@]}"; do
@@ -321,7 +327,7 @@ main() {
         
         echo ""
         success "🎉 Refac Tools installation completed!"
-        success "Tools installed: refac, scrap, unscrap"
+        success "Tools installed: refac, scrap, unscrap, verbump"
         success "Version: $PROJECT_VERSION"
         success "Location: $INSTALL_DIR"
         
@@ -331,12 +337,14 @@ main() {
         log "  scrap temp_file.txt                        # Move file to .scrap folder"
         log "  scrap                                       # List .scrap contents"
         log "  unscrap                                     # Restore last scrapped item"
+        log "  verbump install                             # Install git hook for version bumping"
         
         echo ""
         log "For more information:"
         log "  refac --help"
         log "  scrap --help"
         log "  unscrap --help"
+        log "  verbump --help"
     fi
 }
 
