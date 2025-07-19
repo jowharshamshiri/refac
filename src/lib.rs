@@ -1,5 +1,6 @@
 pub mod refac;
 pub mod scrap;
+pub mod verbump;
 
 use anyhow::{Context, Result};
 use std::path::Path;
@@ -11,6 +12,9 @@ pub use refac::rename_engine::RenameEngine;
 
 // Re-export from scrap module
 pub use scrap::scrap_common::{ScrapMetadata, ScrapEntry};
+
+// Re-export from verbump module
+pub use verbump::{VerbumpConfig, VersionInfo};
 
 /// Main entry point for the refac operation
 pub fn run_refac(args: Args) -> Result<()> {

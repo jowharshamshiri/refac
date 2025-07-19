@@ -77,7 +77,9 @@ fn restore_item(scrap_dir: &Path, name: &str, custom_dest: Option<PathBuf>, forc
         entry.original_path.clone()
     } else {
         // No metadata, restore to current directory
-        PathBuf::from(name)
+        env::current_dir()
+            .unwrap_or_else(|_| PathBuf::from("."))
+            .join(name)
     };
     
     // Check if destination exists
