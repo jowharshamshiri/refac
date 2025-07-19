@@ -10,7 +10,7 @@ use std::process;
 #[derive(Parser, Debug)]
 #[command(name = "unscrap")]
 #[command(about = "Restore files from .scrap folder to their original locations")]
-#[command(version = "0.1.0")]
+#[command(version = refac::get_version())]
 struct Args {
     /// Name of file/directory in .scrap to restore
     name: Option<String>,

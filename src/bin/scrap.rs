@@ -15,7 +15,7 @@ use tar::Builder;
 #[derive(Parser, Debug)]
 #[command(name = "scrap")]
 #[command(about = "Smart file/directory management with a .scrap folder")]
-#[command(version = "0.1.0")]
+#[command(version = refac::get_version())]
 struct Args {
     /// Paths to files or directories to move to .scrap folder
     paths: Vec<PathBuf>,
@@ -793,5 +793,51 @@ mod tests {
         // Check contents are different
         assert_eq!(fs::read_to_string(scrap_dir.join("test.txt")).unwrap(), "original");
         assert_eq!(fs::read_to_string(scrap_dir.join("test_1.txt")).unwrap(), "new content");
+    }
+    
+    #[test]
+    fn test_shell_expansion_simulation() {
+        let temp_dir = TempDir::new().unwrap();
+        let scrap_dir = temp_dir.path().join(".scrap");
+        create_scrap_directory(&scrap_dir).unwrap();
+        
+        // Create multiple test files (simulating shell expansion result)
+        let files = vec![
+            temp_dir.path().join("file1.txt"),
+            temp_dir.path().join("file2.txt"),
+            temp_dir.path().join("file3.txt"),
+        ];
+        
+        for (i, file) in files.iter().enumerate() {
+            fs::write(file, format!("content{}", i + 1)).unwrap();
+        }
+        
+        // Simulate what happens when shell expands "*.txt" 
+        // (this is what the main logic does when multiple paths are provided)
+        for file in &files {
+            move_to_scrap(file, &scrap_dir, temp_dir.path()).unwrap();
+        }
+        
+        // Check all files were moved
+        for file in &files {
+            assert!(!file.exists());
+        }
+        
+        // Check all files exist in scrap
+        assert!(scrap_dir.join("file1.txt").exists());
+        assert!(scrap_dir.join("file2.txt").exists());
+        assert!(scrap_dir.join("file3.txt").exists());
+        
+        // Check contents preserved
+        assert_eq!(fs::read_to_string(scrap_dir.join("file1.txt")).unwrap(), "content1");
+        assert_eq!(fs::read_to_string(scrap_dir.join("file2.txt")).unwrap(), "content2");
+        assert_eq!(fs::read_to_string(scrap_dir.join("file3.txt")).unwrap(), "content3");
+        
+        // Check metadata was created for all files
+        let metadata = ScrapMetadata::load(&scrap_dir).unwrap();
+        assert_eq!(metadata.entries.len(), 3);
+        assert!(metadata.get_entry("file1.txt").is_some());
+        assert!(metadata.get_entry("file2.txt").is_some());
+        assert!(metadata.get_entry("file3.txt").is_some());
     }
 }

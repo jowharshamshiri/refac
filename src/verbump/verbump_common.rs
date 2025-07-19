@@ -260,7 +260,17 @@ fn detect_file_type(path: &Path) -> Option<ProjectFileType> {
         "pom.xml" => Some(ProjectFileType::PomXml),
         "build.gradle" => Some(ProjectFileType::BuildGradle),
         "CMakeLists.txt" => Some(ProjectFileType::CMakeLists),
-        _ => None,
+        _filename => {
+            // Handle generic file types by extension
+            if let Some(extension) = path.extension().and_then(|ext| ext.to_str()) {
+                match extension {
+                    "json" => Some(ProjectFileType::PackageJson), // Treat all JSON files like package.json
+                    _ => None,
+                }
+            } else {
+                None
+            }
+        }
     }
 }
 
@@ -568,6 +578,10 @@ mod tests {
         // Test package.json detection
         let package_path = temp_dir.path().join("package.json");
         assert_eq!(detect_file_type(&package_path), Some(ProjectFileType::PackageJson));
+        
+        // Test generic JSON file detection
+        let custom_json_path = temp_dir.path().join("custom.json");
+        assert_eq!(detect_file_type(&custom_json_path), Some(ProjectFileType::PackageJson));
         
         // Test unknown file
         let unknown_path = temp_dir.path().join("unknown.txt");

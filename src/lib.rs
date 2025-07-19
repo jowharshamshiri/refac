@@ -5,6 +5,11 @@ pub mod verbump;
 use anyhow::{Context, Result};
 use std::path::Path;
 
+/// Read version from version.txt file at project root
+pub fn get_version() -> &'static str {
+    include_str!("../version.txt").trim()
+}
+
 // Re-export from refac module for backward compatibility
 pub use refac::cli as cli;
 pub use refac::cli::{Args, Mode};
@@ -199,5 +204,26 @@ mod tests {
         assert!(utils::contains_pattern("hello world", "world"));
         assert!(utils::contains_pattern("hello world", "o w"));
         assert!(!utils::contains_pattern("hello world", "xyz"));
+    }
+    
+    #[test]
+    fn test_get_version() {
+        let version = get_version();
+        // Should not be empty
+        assert!(!version.is_empty());
+        // Should be a valid version format (x.y.z)
+        assert!(version.contains('.'));
+        // Should match current version in version.txt
+        assert_eq!(version, "0.27.19182");
+    }
+    
+    #[test]
+    fn test_version_consistency() {
+        // Test that version.txt exists and is readable
+        let version_content = std::fs::read_to_string("version.txt").expect("version.txt should exist");
+        let file_version = version_content.trim();
+        
+        // Should match what get_version() returns
+        assert_eq!(get_version(), file_version);
     }
 }

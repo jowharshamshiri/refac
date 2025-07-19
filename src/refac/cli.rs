@@ -3,7 +3,7 @@ use std::path::PathBuf;
 
 #[derive(Parser, Debug, Clone)]
 #[command(name = "refac")]
-#[command(version, about = "A robust cross-platform tool for recursive string replacement in file/folder names and contents")]
+#[command(version = crate::get_version(), about = "A robust cross-platform tool for recursive string replacement in file/folder names and contents")]
 #[command(long_about = None)]
 pub struct Args {
     /// Root directory to search in

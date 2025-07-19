@@ -11,7 +11,7 @@ use std::process::Command;
 #[derive(Parser, Debug)]
 #[command(name = "verbump")]
 #[command(about = "Automatic version bumping based on git commits and changes")]
-#[command(version = "0.1.0")]
+#[command(version = refac::get_version())]
 struct Args {
     #[command(subcommand)]
     command: Option<Commands>,
