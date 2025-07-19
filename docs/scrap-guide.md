@@ -5,7 +5,7 @@ title: Scrap Tool Guide
 
 # Scrap Tool Guide
 
-The `scrap` tool provides file and directory management using a `.scrap` folder for temporary storage. It's designed to help you organize your workspace by temporarily moving files you don't need immediately, with the ability to easily restore them later.
+The `scrap` tool provides a local trash can using a `.scrap` folder for files you want to delete. It's designed to safely handle files you want to remove from your workspace by moving them to a trash folder, with the ability to easily restore them later.
 
 ## Core Concepts
 

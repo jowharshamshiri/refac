@@ -5,7 +5,7 @@ title: Examples
 
 # Real-World Examples
 
-Learn how to use the Refac Tools suite through practical examples for common development workflows, combining refactoring, project cleanup, and version control.
+Learn how to use the Nomion tool suite through practical examples for common development workflows, combining refactoring, project cleanup, and version control.
 
 ## Development Workflows
 
@@ -18,7 +18,7 @@ Learn how to use the Refac Tools suite through practical examples for common dev
 verbump install
 git tag v1.0  # Mark current state
 
-# 2. Move unwanted files to trash
+# 2. Move unwanted files to local trash can
 scrap temp_files/ debug_logs/ old_tests/
 
 # 3. Preview and apply refactoring
@@ -91,10 +91,10 @@ echo "Tagged release: v$NEW_VERSION"
 
 #### Project Cleanup Instead of Deletion
 
-**Scenario**: Cleaning up files you don't want but might need later.
+**Scenario**: Moving files to trash that you don't want but might need later.
 
 ```bash
-# Move unwanted files to .scrap instead of deleting
+# Move unwanted files to local trash can instead of deleting
 scrap *.tmp *.log build/ target/debug/
 
 # List what you've scrapped
@@ -643,8 +643,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      - name: Install Refac
-        run: cargo install --git https://github.com/jowharshamshiri/refac
+      - name: Install Nomion
+        run: cargo install --git https://github.com/jowharshamshiri/nomion
         
       - name: Check for deprecated patterns
         run: |
@@ -818,7 +818,7 @@ echo "Refactoring workflow complete!"
 **Scenario**: Establishing a consistent workflow for a development team.
 
 ```bash
-# team-setup.sh - Setup Refac Tools for team development
+# team-setup.sh - Setup Nomion for team development
 
 # 1. Install all tools for the team
 ./install.sh
@@ -884,7 +884,7 @@ echo "  ./safe-refactor.sh old new - Safe refactoring"
 
 ### Release Pipeline Integration
 
-**Scenario**: Integrating Refac Tools into a CI/CD pipeline.
+**Scenario**: Integrating Nomion into a CI/CD pipeline.
 
 ```bash
 # release-pipeline.sh - Automated release preparation
@@ -922,4 +922,4 @@ echo "Release pipeline complete!"
 echo "Artifact: releases/app-v$RELEASE_VERSION.tar.gz"
 ```
 
-These examples demonstrate how the Refac Tools suite provides a solution for development workflow management, combining safe refactoring, intelligent file management, and automatic version tracking.
+These examples demonstrate how the Nomion tool suite provides a comprehensive solution for development workflow management, combining safe refactoring, intelligent file management, and automatic version tracking.

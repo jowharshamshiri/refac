@@ -1,10 +1,11 @@
-# Refac Tools
+# Nomion
 
-A collection of robust, cross-platform command-line tools for file and directory operations. The suite includes:
+A comprehensive tool suite for file operations, version management, and development workflow automation. The suite includes:
 
 - **refac**: Recursive string replacement in file/folder names and contents
-- **scrap**: Smart file/directory management with a `.scrap` folder for temporary storage
+- **scrap**: Local trash can using a `.scrap` folder for files you want to delete
 - **unscrap**: Restore files from `.scrap` folder to their original locations
+- **verbump**: Automated version management for projects
 
 These tools are designed for safety, reliability, and performance, making them suitable for mission-critical operations.
 
@@ -45,8 +46,8 @@ These tools are designed for safety, reliability, and performance, making them s
 ### Easy Installation (Recommended)
 
 ```bash
-git clone https://github.com/jowharshamshiri/refac
-cd refac
+git clone https://github.com/jowharshamshiri/nomion
+cd nomion
 ./install.sh
 ```
 
@@ -77,8 +78,8 @@ The installation script will:
 
 ```bash
 # Clone the repository
-git clone https://github.com/jowharshamshiri/refac
-cd refac
+git clone https://github.com/jowharshamshiri/nomion
+cd nomion
 
 # Build and install all tools
 cargo build --release
@@ -236,11 +237,11 @@ The tool checks for potential naming conflicts before making changes:
 
 ### Scrap Tool
 
-The `scrap` tool provides a file/directory management system using a `.scrap` folder for temporary storage, with features for organizing, searching, and maintaining your workspace.
+The `scrap` tool provides a local trash can using a `.scrap` folder for files you want to delete, with features for listing, searching, and cleaning up deleted files.
 
 #### Core Features
 
-- **Smart file management**: Move files/directories to `.scrap` with automatic conflict resolution
+- **Local trash can**: Move files/directories to `.scrap` with automatic conflict resolution
 - **Automatic setup**: Creates `.scrap` directory and updates `.gitignore` automatically
 - **Metadata tracking**: Remembers original file locations and timestamps
 - **Multiple operation modes**: List, clean, search, archive, and restore capabilities
@@ -321,7 +322,7 @@ scrap archive --remove
 #### Examples
 
 ```bash
-# Basic file management
+# Move files to local trash can
 scrap temp.log debug.txt old_backup/
 
 # Clean up workspace
@@ -527,8 +528,8 @@ Contributions are welcome! Please read the contributing guidelines and submit pu
 
 ```bash
 # Clone the repository
-git clone https://github.com/jowharshamshiri/refac
-cd refac-tool/refac_rs
+git clone https://github.com/jowharshamshiri/nomion
+cd nomion-tool/refac_rs
 
 # Run tests
 cargo test

@@ -5,11 +5,11 @@ title: Command Reference
 
 # Command Reference
 
-reference for all Refac Tools command-line options and usage patterns.
+reference for all Nomion command-line options and usage patterns.
 
 ## Tools Overview
 
-The Refac Tools suite includes four command-line utilities:
+The Nomion tool suite includes four command-line utilities:
 
 ### Refac - String Replacement
 ```bash
@@ -414,7 +414,7 @@ scrap [PATH...] [SUBCOMMAND] [OPTIONS]
 
 ### Basic Operations
 ```bash
-# Move unwanted files to .scrap trash folder
+# Move unwanted files to local trash can
 scrap file.txt directory/
 
 # List .scrap contents (default when no args)
@@ -434,7 +434,7 @@ scrap list [--sort name|date|size]
 
 ### Examples
 ```bash
-scrap temp.txt logs/                    # Move to trash
+scrap temp.txt logs/                    # Move to local trash can
 scrap list --sort size                  # List trash contents
 scrap find "*.log"                      # Find log files in trash
 scrap clean --days 30                   # Permanently remove old items
@@ -550,4 +550,4 @@ For more information:
 - [Getting Started]({{ '/getting-started/' | relative_url }}) - Quick start guide
 - [Usage Guide]({{ '/usage/' | relative_url }}) - usage examples
 - [Tool-Specific Guides]({{ '/scrap-guide/' | relative_url }}) - Individual tool documentation
-- [GitHub Issues](https://github.com/jowharshamshiri/refac/issues) - Report bugs or request features
+- [GitHub Issues](https://github.com/jowharshamshiri/nomion/issues) - Report bugs or request features

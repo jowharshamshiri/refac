@@ -4,7 +4,7 @@ use clap::{Parser, Subcommand};
 use colored::Colorize;
 use flate2::write::GzEncoder;
 use flate2::Compression;
-use refac::scrap::{ScrapEntry, ScrapMetadata};
+use nomion::scrap::{ScrapEntry, ScrapMetadata};
 use std::env;
 use std::fs::{self, OpenOptions};
 use std::io::{BufRead, BufReader, Write};
@@ -14,8 +14,8 @@ use tar::Builder;
 
 #[derive(Parser, Debug)]
 #[command(name = "scrap")]
-#[command(about = "Smart file/directory management with a .scrap folder")]
-#[command(version = refac::get_version())]
+#[command(about = "Local trash can using a .scrap folder for files you want to delete - part of the nomion tool suite")]
+#[command(version = nomion::get_version())]
 struct Args {
     /// Paths to files or directories to move to .scrap folder
     paths: Vec<PathBuf>,

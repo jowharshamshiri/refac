@@ -5,7 +5,7 @@ title: Installation Guide
 
 # Installation Guide
 
-This guide covers multiple ways to install the Refac Tools suite on your system.
+This guide covers multiple ways to install the Nomion tool suite on your system.
 
 ## Prerequisites
 
@@ -14,12 +14,12 @@ This guide covers multiple ways to install the Refac Tools suite on your system.
 
 ## Easy Installation (Recommended)
 
-The fastest way to install all Refac Tools:
+The fastest way to install all Nomion tools:
 
 ```bash
 # Clone the repository
-git clone https://github.com/jowharshamshiri/refac.git
-cd refac
+git clone https://github.com/jowharshamshiri/nomion.git
+cd nomion
 
 # Run the installation script
 ./install.sh
@@ -52,8 +52,8 @@ For users who prefer manual control:
 
 ```bash
 # Clone the repository
-git clone https://github.com/jowharshamshiri/refac.git
-cd refac
+git clone https://github.com/jowharshamshiri/nomion.git
+cd nomion
 
 # Build in release mode
 cargo build --release
@@ -76,8 +76,8 @@ For development or testing the latest changes:
 
 ```bash
 # Clone the repository
-git clone https://github.com/jowharshamshiri/refac.git
-cd refac
+git clone https://github.com/jowharshamshiri/nomion.git
+cd nomion
 
 # Run without installing
 cargo run -- --help
@@ -169,7 +169,7 @@ cargo install --path . --force
 
 ## Uninstalling
 
-To remove Refac:
+To remove Nomion:
 
 ```bash
 # If installed via install.sh script
@@ -274,8 +274,8 @@ xcode-select --install
 If you encounter issues:
 
 1. Check the [troubleshooting section]({{ '/troubleshooting/' | relative_url }})
-2. Search [existing issues](https://github.com/jowharshamshiri/refac/issues)
-3. Create a [new issue](https://github.com/jowharshamshiri/refac/issues/new) with:
+2. Search [existing issues](https://github.com/jowharshamshiri/nomion/issues)
+3. Create a [new issue](https://github.com/jowharshamshiri/nomion/issues/new) with:
    - Your operating system and version
    - Rust version (`rustc --version`)
    - error message

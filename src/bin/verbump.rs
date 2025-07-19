@@ -1,7 +1,7 @@
 use anyhow::{Context, Result};
 use clap::{Parser, Subcommand};
 use colored::Colorize;
-use refac::verbump::{VerbumpConfig, VersionInfo, detect_project_files, update_version_file};
+use nomion::verbump::{VerbumpConfig, VersionInfo, detect_project_files, update_version_file};
 use std::env;
 use std::fs::{self, OpenOptions};
 use std::io::Write;
@@ -10,8 +10,8 @@ use std::process::Command;
 
 #[derive(Parser, Debug)]
 #[command(name = "verbump")]
-#[command(about = "Automatic version bumping based on git commits and changes")]
-#[command(version = refac::get_version())]
+#[command(about = "Automatic version bumping based on git commits and changes - part of the nomion tool suite")]
+#[command(version = nomion::get_version())]
 struct Args {
     #[command(subcommand)]
     command: Option<Commands>,

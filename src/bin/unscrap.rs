@@ -1,7 +1,7 @@
 use anyhow::{Context, Result};
 use clap::Parser;
 use colored::Colorize;
-use refac::scrap::{ScrapEntry, ScrapMetadata};
+use nomion::scrap::{ScrapMetadata};
 use std::env;
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -9,8 +9,8 @@ use std::process;
 
 #[derive(Parser, Debug)]
 #[command(name = "unscrap")]
-#[command(about = "Restore files from .scrap folder to their original locations")]
-#[command(version = refac::get_version())]
+#[command(about = "Restore files from .scrap folder to their original locations - part of the nomion tool suite")]
+#[command(version = nomion::get_version())]
 struct Args {
     /// Name of file/directory in .scrap to restore
     name: Option<String>,
@@ -142,6 +142,7 @@ mod tests {
     use super::*;
     use tempfile::TempDir;
     use chrono::Utc;
+    use nomion::ScrapEntry;
     
     fn setup_test_env() -> (TempDir, PathBuf) {
         let temp_dir = TempDir::new().unwrap();

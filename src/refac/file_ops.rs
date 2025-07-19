@@ -4,7 +4,7 @@ use std::io::{BufRead, BufReader, BufWriter, Write};
 use std::path::{Path, PathBuf};
 use super::binary_detector::BinaryDetector;
 
-/// File operations for the refac tool
+/// File operations for the refac tool (part of the nomion suite)
 pub struct FileOperations {
     binary_detector: BinaryDetector,
     backup_enabled: bool,

@@ -657,7 +657,7 @@ impl RenameEngine {
             return Ok(());
         }
 
-        self.print_success("=== REFAC TOOL ===")?;
+        self.print_success("=== NOMION REFAC TOOL ===")?;
         self.print_info(&format!("Root directory: {}", self.config.root_dir.display()))?;
         self.print_info(&format!("Old string: '{}'", self.config.old_string))?;
         self.print_info(&format!("New string: '{}'", self.config.new_string))?;

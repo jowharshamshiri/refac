@@ -9,7 +9,7 @@ layout: default
 2. Clone your fork:
 
 ```bash
-git clone https://github.com/your-username/refac
+git clone https://github.com/your-username/nomion
 ```
 
 3. Build the project:

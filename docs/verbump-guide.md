@@ -32,7 +32,7 @@ Verbump uses a three-part versioning scheme based on your Git repository:
 
 ### 1. Install Verbump
 
-First, ensure verbump is installed as part of the Refac Tools suite:
+First, ensure verbump is installed as part of the Nomion tool suite:
 
 ```bash
 # Install all tools including verbump

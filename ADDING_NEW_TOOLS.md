@@ -1,6 +1,6 @@
-# Adding New Tools to Refac Tools Suite
+# Adding New Tools to Nomion
 
-This document provides a guide for adding new tools to the Refac Tools suite. It captures all requirements, patterns, and integration steps to ensure consistency and quality across all tools.
+This document provides a guide for adding new tools to the Nomion tool suite. It captures all requirements, patterns, and integration steps to ensure consistency and quality across all tools.
 
 ## Table of Contents
 
@@ -17,7 +17,7 @@ This document provides a guide for adding new tools to the Refac Tools suite. It
 
 ### Core Principles
 
-All tools in the Refac Tools suite must adhere to these fundamental principles:
+All tools in the Nomion tool suite must adhere to these fundamental principles:
 
 1. **Safety First**: Never destructive without explicit confirmation
 2. **Atomic Operations**: All-or-nothing operations to prevent corruption
@@ -613,6 +613,6 @@ Each demonstrates different aspects of the project patterns and can serve as imp
 
 ## Final Notes
 
-This guide ensures consistency, quality, and maintainability across all tools in the Refac Tools suite. Following these patterns makes the tools feel like a cohesive suite rather than separate utilities, providing users with a smooth, predictable experience.
+This guide ensures consistency, quality, and maintainability across all tools in the Nomion tool suite. Following these patterns makes the tools feel like a cohesive suite rather than separate utilities, providing users with a smooth, predictable experience.
 
 When in doubt, look at existing tools for patterns and maintain consistency with established conventions. The goal is to create tools that are powerful, safe, and delightful to use.

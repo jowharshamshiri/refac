@@ -3,7 +3,7 @@ use std::fs::{self, File};
 use std::io::Write;
 use std::path::Path;
 use tempfile::TempDir;
-use refac::{cli::Args, run_refac};
+use nomion::{cli::Args, run_refac};
 
 /// Test utilities
 mod test_utils {
@@ -109,9 +109,9 @@ fn test_basic_replacement() -> Result<()> {
         max_depth: 0,
         exclude_patterns: vec![],
         include_patterns: vec![],
-        format: refac::cli::OutputFormat::Plain,
+        format: nomion::cli::OutputFormat::Plain,
         threads: 1,
-        progress: refac::cli::ProgressMode::Never,
+        progress: nomion::cli::ProgressMode::Never,
         ignore_case: false,
         use_regex: false,
     };
@@ -158,9 +158,9 @@ fn test_dry_run_mode() -> Result<()> {
         max_depth: 0,
         exclude_patterns: vec![],
         include_patterns: vec![],
-        format: refac::cli::OutputFormat::Plain,
+        format: nomion::cli::OutputFormat::Plain,
         threads: 1,
-        progress: refac::cli::ProgressMode::Never,
+        progress: nomion::cli::ProgressMode::Never,
         ignore_case: false,
         use_regex: false,
     };
@@ -206,9 +206,9 @@ fn test_case_sensitivity() -> Result<()> {
         max_depth: 0,
         exclude_patterns: vec![],
         include_patterns: vec![],
-        format: refac::cli::OutputFormat::Plain,
+        format: nomion::cli::OutputFormat::Plain,
         threads: 1,
-        progress: refac::cli::ProgressMode::Never,
+        progress: nomion::cli::ProgressMode::Never,
         ignore_case: false,
         use_regex: false,
     };
@@ -251,9 +251,9 @@ fn test_complex_nested_structure() -> Result<()> {
         max_depth: 0,
         exclude_patterns: vec![],
         include_patterns: vec![],
-        format: refac::cli::OutputFormat::Plain,
+        format: nomion::cli::OutputFormat::Plain,
         threads: 1,
-        progress: refac::cli::ProgressMode::Never,
+        progress: nomion::cli::ProgressMode::Never,
         ignore_case: false,
         use_regex: false,
     };
@@ -302,9 +302,9 @@ fn test_files_only_mode() -> Result<()> {
         max_depth: 0,
         exclude_patterns: vec![],
         include_patterns: vec![],
-        format: refac::cli::OutputFormat::Plain,
+        format: nomion::cli::OutputFormat::Plain,
         threads: 1,
-        progress: refac::cli::ProgressMode::Never,
+        progress: nomion::cli::ProgressMode::Never,
         ignore_case: false,
         use_regex: false,
     };
@@ -344,9 +344,9 @@ fn test_dirs_only_mode() -> Result<()> {
         max_depth: 0,
         exclude_patterns: vec![],
         include_patterns: vec![],
-        format: refac::cli::OutputFormat::Plain,
+        format: nomion::cli::OutputFormat::Plain,
         threads: 1,
-        progress: refac::cli::ProgressMode::Never,
+        progress: nomion::cli::ProgressMode::Never,
         ignore_case: false,
         use_regex: false,
     };
@@ -389,9 +389,9 @@ fn test_names_only_mode() -> Result<()> {
         max_depth: 0,
         exclude_patterns: vec![],
         include_patterns: vec![],
-        format: refac::cli::OutputFormat::Plain,
+        format: nomion::cli::OutputFormat::Plain,
         threads: 1,
-        progress: refac::cli::ProgressMode::Never,
+        progress: nomion::cli::ProgressMode::Never,
         ignore_case: false,
         use_regex: false,
     };
@@ -432,9 +432,9 @@ fn test_content_only_mode() -> Result<()> {
         max_depth: 0,
         exclude_patterns: vec![],
         include_patterns: vec![],
-        format: refac::cli::OutputFormat::Plain,
+        format: nomion::cli::OutputFormat::Plain,
         threads: 1,
-        progress: refac::cli::ProgressMode::Never,
+        progress: nomion::cli::ProgressMode::Never,
         ignore_case: false,
         use_regex: false,
     };
@@ -480,9 +480,9 @@ fn test_binary_file_handling() -> Result<()> {
         max_depth: 0,
         exclude_patterns: vec![],
         include_patterns: vec![],
-        format: refac::cli::OutputFormat::Plain,
+        format: nomion::cli::OutputFormat::Plain,
         threads: 1,
-        progress: refac::cli::ProgressMode::Never,
+        progress: nomion::cli::ProgressMode::Never,
         ignore_case: false,
         use_regex: false,
     };
@@ -534,9 +534,9 @@ fn test_max_depth() -> Result<()> {
         max_depth: 4,
         exclude_patterns: vec![],
         include_patterns: vec![],
-        format: refac::cli::OutputFormat::Plain,
+        format: nomion::cli::OutputFormat::Plain,
         threads: 1,
-        progress: refac::cli::ProgressMode::Never,
+        progress: nomion::cli::ProgressMode::Never,
         ignore_case: false,
         use_regex: false,
     };
@@ -576,9 +576,9 @@ fn test_backup_functionality() -> Result<()> {
         max_depth: 0,
         exclude_patterns: vec![],
         include_patterns: vec![],
-        format: refac::cli::OutputFormat::Plain,
+        format: nomion::cli::OutputFormat::Plain,
         threads: 1,
-        progress: refac::cli::ProgressMode::Never,
+        progress: nomion::cli::ProgressMode::Never,
         ignore_case: false,
         use_regex: false,
     };
@@ -642,9 +642,9 @@ fn test_multiple_occurrences() -> Result<()> {
         max_depth: 0,
         exclude_patterns: vec![],
         include_patterns: vec![],
-        format: refac::cli::OutputFormat::Plain,
+        format: nomion::cli::OutputFormat::Plain,
         threads: 1,
-        progress: refac::cli::ProgressMode::Never,
+        progress: nomion::cli::ProgressMode::Never,
         ignore_case: false,
         use_regex: false,
     };
@@ -686,9 +686,9 @@ fn test_hidden_files() -> Result<()> {
         max_depth: 0,
         exclude_patterns: vec![],
         include_patterns: vec![".*".to_string()], // Include hidden files
-        format: refac::cli::OutputFormat::Plain,
+        format: nomion::cli::OutputFormat::Plain,
         threads: 1,
-        progress: refac::cli::ProgressMode::Never,
+        progress: nomion::cli::ProgressMode::Never,
         ignore_case: false,
         use_regex: false,
     };
@@ -731,9 +731,9 @@ fn test_exclude_patterns() -> Result<()> {
         max_depth: 0,
         exclude_patterns: vec!["*.log".to_string()],
         include_patterns: vec![],
-        format: refac::cli::OutputFormat::Plain,
+        format: nomion::cli::OutputFormat::Plain,
         threads: 1,
-        progress: refac::cli::ProgressMode::Never,
+        progress: nomion::cli::ProgressMode::Never,
         ignore_case: false,
         use_regex: false,
     };
@@ -773,9 +773,9 @@ fn test_parallel_processing() -> Result<()> {
         max_depth: 0,
         exclude_patterns: vec![],
         include_patterns: vec![],
-        format: refac::cli::OutputFormat::Plain,
+        format: nomion::cli::OutputFormat::Plain,
         threads: 4, // Use multiple threads
-        progress: refac::cli::ProgressMode::Never,
+        progress: nomion::cli::ProgressMode::Never,
         ignore_case: false,
         use_regex: false,
     };

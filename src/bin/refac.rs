@@ -1,6 +1,6 @@
 use clap::Parser;
 use colored::*;
-use refac::{cli::Args, run_refac};
+use nomion::{cli::Args, run_refac};
 use std::process;
 
 fn main() {
@@ -53,7 +53,7 @@ mod tests {
         cmd.arg("--help");
         cmd.assert()
             .success()
-            .stdout(predicate::str::contains("A robust cross-platform tool"));
+            .stdout(predicate::str::contains("nomion tool suite"));
         Ok(())
     }
 
@@ -195,7 +195,7 @@ mod tests {
         ]);
         cmd.assert()
             .success()
-            .stdout(predicate::str::contains("REFAC TOOL"));
+            .stdout(predicate::str::contains("NOMION REFAC TOOL"));
 
         Ok(())
     }

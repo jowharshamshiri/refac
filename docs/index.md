@@ -1,12 +1,12 @@
 ---
 layout: default
-title: Refac Tools - Command-Line Tool Suite
+title: Nomion - Command-Line Tool Suite
 toc: false
 ---
 
-# Refac Tools
+# Nomion
 
-A suite of robust, cross-platform command-line tools for developers and system administrators. The suite includes **refac** for string replacement, **scrap** for smart file management, **unscrap** for file restoration, and **verbump** for automatic version management. Designed for safety, reliability, and performance, making them suitable for mission-critical operations and daily development workflows.
+A suite of robust, cross-platform command-line tools for developers and system administrators. The suite includes **refac** for string replacement, **scrap** for local trash functionality, **unscrap** for file restoration, and **verbump** for automatic version management. Designed for safety, reliability, and performance, making them suitable for mission-critical operations and daily development workflows.
 
 ## Tools Overview
 
@@ -105,8 +105,8 @@ verbump status
 ### From Source
 
 ```bash
-git clone https://github.com/jowharshamshiri/refac
-cd refac
+git clone https://github.com/jowharshamshiri/nomion
+cd nomion
 cargo build --release
 
 # Install all tools
@@ -192,7 +192,7 @@ refac ./project "oldname" "newname" --exclude "target/*" --exclude "*.log"
 
 - View tool options: `refac --help`, `scrap --help`, `unscrap --help`, `verbump --help`
 - Check versions: `refac --version`, `scrap --version`, `unscrap --version`, `verbump --version`
-- Report issues: [GitHub Issues](https://github.com/jowharshamshiri/refac/issues)
+- Report issues: [GitHub Issues](https://github.com/jowharshamshiri/nomion/issues)
 
 ## Documentation
 
@@ -202,4 +202,4 @@ refac ./project "oldname" "newname" --exclude "target/*" --exclude "*.log"
 
 ## License
 
-MIT License - see the [LICENSE](https://github.com/jowharshamshiri/refac/blob/main/LICENSE) file for details.
+MIT License - see the [LICENSE](https://github.com/jowharshamshiri/nomion/blob/main/LICENSE) file for details.

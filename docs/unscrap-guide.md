@@ -5,7 +5,7 @@ title: Unscrap Tool Guide
 
 # Unscrap Tool Guide
 
-The `unscrap` tool restores files and directories from the `.scrap` folder back to their original locations or custom destinations. It works in conjunction with the `scrap` tool to provide a file management workflow.
+The `unscrap` tool restores files and directories from the `.scrap` folder back to their original locations or custom destinations. It works in conjunction with the `scrap` tool to provide a complete trash can workflow.
 
 ## Core Concepts
 

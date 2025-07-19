@@ -1,12 +1,12 @@
 # Site settings
-title: Refac Tools - Command-Line Tool Suite
+title: Nomion - Command-Line Tool Suite
 description: >-
-  A suite of command-line tools for string replacement, project cleanup, 
-  and version control. Includes refac (string replacement), scrap (local trash folder), 
+  Nomion is a comprehensive tool suite for file operations, version management, 
+  and development workflow automation. Includes refac (string replacement), scrap (local trash folder), 
   unscrap (file restoration), and verbump (automatic versioning).
 author: Bahram Shamshiri
 email: jowharshamshiri@gmail.com
-baseurl: "/refac"
+baseurl: "/nomion"
 url: "https://jowharshamshiri.github.io"
 
 # Build settings
@@ -52,10 +52,10 @@ navigation:
     url: /contributing/
 
 # GitHub repository information
-repository: jowharshamshiri/refac
+repository: jowharshamshiri/nomion
 github:
-  repository_name: refac
-  repository_nwo: jowharshamshiri/refac
+  repository_name: nomion
+  repository_nwo: jowharshamshiri/nomion
 
 # Exclude files from processing
 exclude:

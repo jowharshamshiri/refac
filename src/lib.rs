@@ -21,7 +21,7 @@ pub use scrap::scrap_common::{ScrapMetadata, ScrapEntry};
 // Re-export from verbump module
 pub use verbump::{VerbumpConfig, VersionInfo};
 
-/// Main entry point for the refac operation
+/// Main entry point for the refac operation within the nomion tool suite
 pub fn run_refac(args: Args) -> Result<()> {
     let engine = RenameEngine::new(args)?;
     engine.execute()
@@ -214,7 +214,7 @@ mod tests {
         // Should be a valid version format (x.y.z)
         assert!(version.contains('.'));
         // Should match current version in version.txt
-        assert_eq!(version, "0.27.19182");
+        assert_eq!(version, "0.28.19341");
     }
     
     #[test]

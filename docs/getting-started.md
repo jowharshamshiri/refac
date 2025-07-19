@@ -3,16 +3,16 @@ layout: default
 title: Getting Started
 ---
 
-# Getting Started with Refac Tools
+# Getting Started with Nomion
 
-This guide will help you get up and running with the Refac Tools suite quickly. Learn the core concepts and basic usage patterns for all four tools.
+This guide will help you get up and running with the Nomion tool suite quickly. Learn the core concepts and basic usage patterns for all four tools.
 
-## What are Refac Tools?
+## What is Nomion?
 
-Refac Tools is a suite of command-line utilities for developers and system administrators:
+Nomion is a suite of command-line utilities for developers and system administrators:
 
 - **refac**: Recursive string replacement in file names and contents
-- **scrap**: Local project trash folder for unwanted files
+- **scrap**: Local trash can for files you want to delete
 - **unscrap**: File restoration and undo operations  
 - **verbump**: Automatic version management via git hooks
 
@@ -22,8 +22,8 @@ Refac Tools is a suite of command-line utilities for developers and system admin
 
 ```bash
 # Clone and install all tools
-git clone https://github.com/jowharshamshiri/refac.git
-cd refac
+git clone https://github.com/jowharshamshiri/nomion.git
+cd nomion
 ./install.sh
 ```
 
@@ -61,10 +61,10 @@ refac . "oldFunction" "newFunction" --dry-run
 
 ### 🗑️ Scrap - Local Trash
 
-Project trash folder for unwanted files:
+Local trash can for files you want to delete:
 
 ```bash
-# Move unwanted files to .scrap instead of deleting
+# Move unwanted files to local trash can instead of deleting
 scrap temp_file.txt old_directory/
 
 # List what's in trash

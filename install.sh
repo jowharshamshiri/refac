@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Refac Tools Installation Script
-# This script builds and installs all refac tools (refac, scrap, unscrap, verbump)
+# Nomion Tools Installation Script
+# This script builds and installs all nomion tools (refac, scrap, unscrap, verbump)
 # Multiple runs will update to the latest version
 
 set -e  # Exit on any error
@@ -24,7 +24,7 @@ VERBOSE=false
 usage() {
     echo "Usage: $0 [OPTIONS]"
     echo ""
-    echo "Install Refac Tools (refac, scrap, unscrap, verbump)"
+    echo "Install Nomion Tools (refac, scrap, unscrap, verbump)"
     echo ""
     echo "OPTIONS:"
     echo "  -d, --dir DIR        Installation directory (default: $DEFAULT_INSTALL_DIR)"
@@ -92,12 +92,12 @@ verbose_log() {
 # Check if we're in the right directory
 check_project_directory() {
     if [ ! -f "Cargo.toml" ]; then
-        error "Cargo.toml not found. Please run this script from the refac project root directory."
+        error "Cargo.toml not found. Please run this script from the nomion project root directory."
         exit 1
     fi
     
     if ! grep -q "name = \"refac\"" Cargo.toml; then
-        error "This doesn't appear to be the refac project directory."
+        error "This doesn't appear to be the nomion project directory."
         exit 1
     fi
     
@@ -195,7 +195,7 @@ check_installation_needed() {
 
 # Build the project
 build_project() {
-    log "Building refac tools..."
+    log "Building nomion tools..."
     
     if [ "$VERBOSE" = true ]; then
         cargo build --release
@@ -269,7 +269,7 @@ check_path() {
 
 # Main installation function
 main() {
-    log "Starting Refac Tools installation..."
+    log "Starting Nomion Tools installation..."
     log "Installation directory: $INSTALL_DIR"
     
     check_project_directory
@@ -283,7 +283,7 @@ main() {
         check_path
         
         echo ""
-        success "🎉 Refac Tools installation completed!"
+        success "🎉 Nomion Tools installation completed!"
         success "Tools installed: refac, scrap, unscrap, verbump"
         success "Version: $PROJECT_VERSION"
         success "Location: $INSTALL_DIR"

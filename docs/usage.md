@@ -5,7 +5,7 @@ title: Usage Guide
 
 # Usage Guide
 
-This guide covers all aspects of using the Refac Tools suite for string replacement, project cleanup, and version management.
+This guide covers all aspects of using the Nomion tool suite for string replacement, project cleanup, and version management.
 
 ## Tools Overview
 
@@ -417,14 +417,14 @@ for pattern in "${PATTERNS[@]}"; do
 done
 ```
 
-## Scrap - File Management
+## Scrap - Local Trash Can
 
-The scrap tool provides temporary file storage and organization using a `.scrap` folder.
+The scrap tool provides a local trash can for deleted files using a `.scrap` folder.
 
 ### Basic Operations
 
 ```bash
-# Move files to .scrap folder
+# Move files to local trash can
 scrap temp_file.txt old_directory/
 
 # List contents (default behavior)
@@ -443,12 +443,12 @@ scrap archive --remove
 ### Workflow Examples
 
 ```bash
-# Development workflow
+# Development workflow - move unwanted files to trash
 scrap debug.log temp_output/ experimental_code/
 # Continue working...
 scrap clean --days 7  # Weekly cleanup
 
-# Project organization
+# Remove old files to trash instead of deleting
 scrap old_version/ deprecated_files/
 scrap archive --output "project-backup-v1.0.tar.gz"
 ```
@@ -650,4 +650,4 @@ fi
 - See [Unscrap Tool Guide]({{ '/unscrap-guide/' | relative_url }}) for restoration workflows
 - See [Verbump Tool Guide]({{ '/verbump-guide/' | relative_url }}) for version management setup
 - See [Examples]({{ '/examples/' | relative_url }}) for more real-world scenarios
-- Report issues at [GitHub Issues](https://github.com/jowharshamshiri/refac/issues)
+- Report issues at [GitHub Issues](https://github.com/jowharshamshiri/nomion/issues)
