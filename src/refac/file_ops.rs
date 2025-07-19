@@ -2,7 +2,7 @@ use anyhow::{Context, Result};
 use std::fs::{self, File};
 use std::io::{BufRead, BufReader, BufWriter, Write};
 use std::path::{Path, PathBuf};
-use crate::binary_detector::BinaryDetector;
+use super::binary_detector::BinaryDetector;
 
 /// File operations for the refac tool
 pub struct FileOperations {

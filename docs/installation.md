@@ -5,16 +5,51 @@ title: Installation Guide
 
 # Installation Guide
 
-This guide covers multiple ways to install Refac on your system.
+This guide covers multiple ways to install the Refac Tools suite on your system.
 
 ## Prerequisites
 
 - **Rust toolchain** (if building from source)
 - **Git** (for cloning the repository)
 
-## Installation Method
+## Easy Installation (Recommended)
 
-This method ensures you get the latest version and can customize the build.
+The fastest way to install all Refac Tools:
+
+```bash
+# Clone the repository
+git clone https://github.com/jowharshamshiri/refac.git
+cd refac
+
+# Run the installation script
+./install.sh
+```
+
+The installation script will:
+- Build all tools (`refac`, `scrap`, `unscrap`) in release mode
+- Install to `~/.local/bin` by default
+- Check for updates on subsequent runs
+- Create shell integration for enhanced functionality
+
+### Installation Options
+
+```bash
+./install.sh --help                    # See all options
+./install.sh -d /usr/local/bin         # Install system-wide
+./install.sh --force                   # Force reinstall
+./install.sh --verbose                 # Verbose output
+```
+
+### Uninstall
+
+```bash
+./uninstall.sh                         # Remove all tools
+./uninstall.sh -d /usr/local/bin       # Remove from custom directory
+```
+
+## Manual Installation
+
+For users who prefer manual control:
 
 ```bash
 # Clone the repository
@@ -24,11 +59,16 @@ cd refac
 # Build in release mode
 cargo build --release
 
-# Install to your system
+# Install all tools
 cargo install --path .
+
+# Or install individual tools
+cargo install --path . --bin refac
+cargo install --path . --bin scrap
+cargo install --path . --bin unscrap
 ```
 
-The binary will be installed to your Cargo bin directory (typically `~/.cargo/bin/` on Unix systems).
+The binaries will be installed to your Cargo bin directory (typically `~/.cargo/bin/` on Unix systems).
 
 ### Option 3: Development Build
 

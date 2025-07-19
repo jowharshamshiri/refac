@@ -5,11 +5,13 @@ use std::sync::{Arc, Mutex};
 use walkdir::{DirEntry, WalkDir};
 
 use crate::{
+    ItemType, RenameConfig, RenameItem, RenameStats, utils,
+};
+use super::{
     cli::{Args, Mode, OutputFormat},
     collision_detector::{CollisionDetector, CollisionType},
     file_ops::FileOperations,
     progress::{ProgressTracker, SimpleOutput},
-    utils, ItemType, RenameConfig, RenameItem, RenameStats,
 };
 
 /// Main engine for executing rename operations
@@ -43,9 +45,9 @@ impl RenameEngine {
 
         // Setup progress tracking
         let show_progress = match args.progress {
-            crate::cli::ProgressMode::Always => true,
-            crate::cli::ProgressMode::Never => false,
-            crate::cli::ProgressMode::Auto => atty::is(atty::Stream::Stdout),
+            super::cli::ProgressMode::Always => true,
+            super::cli::ProgressMode::Never => false,
+            super::cli::ProgressMode::Auto => atty::is(atty::Stream::Stdout),
         };
 
         let (progress, simple_output) = if show_progress && args.format == OutputFormat::Human {

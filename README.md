@@ -1,6 +1,12 @@
-# Refac Tool
+# Refac Tools
 
-A robust, cross-platform command-line tool for recursive string replacement in file/folder names and contents. This tool is designed for safety, reliability, and performance, making it suitable for mission-critical operations like large-scale project refactoring.
+A collection of robust, cross-platform command-line tools for file and directory operations. The suite includes:
+
+- **refac**: Recursive string replacement in file/folder names and contents
+- **scrap**: Smart file/directory management with a `.scrap` folder for temporary storage
+- **unscrap**: Restore files from `.scrap` folder to their original locations
+
+These tools are designed for safety, reliability, and performance, making them suitable for mission-critical operations.
 
 ## Features
 
@@ -36,19 +42,54 @@ A robust, cross-platform command-line tool for recursive string replacement in f
 
 ## Installation
 
-### From Source
+### Easy Installation (Recommended)
+
+```bash
+git clone https://github.com/jowharshamshiri/refac
+cd refac
+./install.sh
+```
+
+The installation script will:
+- Build all tools in release mode
+- Install to `~/.local/bin` by default
+- Check for updates on subsequent runs
+- Create shell integration for enhanced functionality
+
+**Installation Options:**
+```bash
+./install.sh --help                    # See all options
+./install.sh -d /usr/local/bin         # Install system-wide
+./install.sh --force                   # Force reinstall
+./install.sh --verbose                 # Verbose output
+```
+
+**Uninstall:**
+```bash
+./uninstall.sh                         # Remove all tools
+./uninstall.sh -d /usr/local/bin       # Remove from custom directory
+```
+
+### Manual Installation
 
 ```bash
 # Clone the repository
 git clone https://github.com/jowharshamshiri/refac
-cd refac-tool/refac_rs
+cd refac
 
-# Build and install
+# Build and install all tools
 cargo build --release
 cargo install --path .
+
+# Or install specific tools
+cargo install --path . --bin refac
+cargo install --path . --bin scrap
+cargo install --path . --bin unscrap
 ```
 
 ## Usage
+
+### Refac Tool
 
 ### Basic Syntax
 
@@ -189,6 +230,177 @@ The tool checks for potential naming conflicts before making changes:
 3. **Test on a copy**: Work on a backup of important directories
 4. **Use version control**: Ensure your files are committed before running
 5. **Be specific with patterns**: Use include/exclude patterns to limit scope
+
+### Scrap Tool
+
+The `scrap` tool provides a comprehensive file/directory management system using a `.scrap` folder for temporary storage, with advanced features for organizing, searching, and maintaining your workspace.
+
+#### Core Features
+
+- **Smart file management**: Move files/directories to `.scrap` with automatic conflict resolution
+- **Automatic setup**: Creates `.scrap` directory and updates `.gitignore` automatically
+- **Metadata tracking**: Remembers original file locations and timestamps
+- **Multiple operation modes**: List, clean, search, archive, and restore capabilities
+- **Git integration**: Automatically excludes `.scrap/` from version control
+- **Safety features**: Never overwrites existing files, provides confirmation prompts
+
+#### Basic Usage
+
+```bash
+# List contents of .scrap folder (default behavior)
+scrap
+
+# Move a file to .scrap folder
+scrap file.txt
+
+# Move a directory to .scrap folder  
+scrap old_code/
+```
+
+#### Advanced Commands
+
+##### List and Browse
+```bash
+# List contents (default when no arguments)
+scrap
+scrap list
+
+# Sort by different criteria
+scrap list --sort name
+scrap list --sort date
+scrap list --sort size
+```
+
+##### Search and Find
+```bash
+# Search by filename (supports regex)
+scrap find ".*\.log"
+scrap find "test.*"
+
+# Search in file contents as well
+scrap find "TODO" --content
+```
+
+##### Cleaning and Maintenance
+```bash
+# Remove items older than 30 days (default)
+scrap clean
+
+# Remove items older than 7 days
+scrap clean --days 7
+
+# Preview what would be removed
+scrap clean --days 30 --dry-run
+
+# Remove all items from .scrap folder
+scrap purge
+
+# Skip confirmation prompt
+scrap purge --force
+```
+
+##### Archive and Backup
+```bash
+# Archive .scrap contents to compressed file
+scrap archive
+
+# Archive with custom filename
+scrap archive --output backup-2024.tar.gz
+
+# Archive and remove original files
+scrap archive --remove
+```
+
+#### Examples
+
+```bash
+# Basic file management
+scrap temp.log debug.txt old_backup/
+
+# Clean up workspace
+scrap clean --days 14              # Remove items older than 2 weeks
+scrap find "\.tmp$" | head -5       # Find temporary files
+
+# Archive old items
+scrap archive --output "archive-$(date +%Y%m%d).tar.gz" --remove
+
+# Handle name conflicts automatically
+scrap file.txt  # Creates .scrap/file.txt
+scrap file.txt  # Creates .scrap/file_1.txt
+scrap file.txt  # Creates .scrap/file_2.txt
+```
+
+#### Metadata and History
+
+The scrap tool automatically tracks:
+- **Original locations**: Where files came from
+- **Timestamps**: When files were scrapped
+- **Restore information**: Easy recovery to original locations
+
+```bash
+# View items with their original locations
+scrap list
+
+# Example output:
+# 📄 file.txt              1.2 KB  2 hours ago     from: /path/to/original/file.txt
+# 📁 old_project          15.3 MB  1 day ago       from: /home/user/old_project
+```
+
+#### Safety Features
+
+- **No overwrites**: Automatically renames to avoid conflicts
+- **Confirmation prompts**: Interactive confirmation for destructive operations
+- **Dry-run mode**: Preview changes before applying them
+- **Atomic operations**: Safe file system operations
+- **Error handling**: Clear messages for common issues
+- **Backup capability**: Archive functionality for long-term storage
+
+#### Integration with Git
+
+- Automatically adds `.scrap/` to `.gitignore`
+- Never commits temporary files to version control
+- Works seamlessly in Git repositories
+
+### Unscrap Tool
+
+The `unscrap` tool restores files from the `.scrap` folder back to their original locations or custom destinations.
+
+#### Basic Usage
+
+```bash
+# Restore last scrapped item
+unscrap
+
+# Restore specific file/directory
+unscrap filename.txt
+
+# Restore to custom location
+unscrap filename.txt --to /new/location/
+
+# Force overwrite if destination exists
+unscrap filename.txt --force
+```
+
+#### Examples
+
+```bash
+# Quick restore of last action
+unscrap
+
+# Restore specific items
+unscrap project_backup/
+unscrap important.txt --to ~/Documents/
+
+# Handle conflicts
+unscrap file.txt --force  # Overwrite existing file
+```
+
+#### How Restoration Works
+
+1. **Metadata lookup**: Finds original location from stored metadata
+2. **Path reconstruction**: Recreates directory structure if needed
+3. **Conflict detection**: Warns if destination already exists
+4. **Safe restoration**: Atomic move operations with error handling
 
 ## Error Handling
 

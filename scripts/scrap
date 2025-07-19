@@ -1,0 +1,36 @@
+#!/bin/bash
+# Wrapper script for scrap binary that handles directory changes
+
+# Get the directory of this script
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+BINARY_PATH="${SCRIPT_DIR}/../target/release/scrap"
+
+# Check if binary exists, if not try debug build
+if [ ! -f "$BINARY_PATH" ]; then
+    BINARY_PATH="${SCRIPT_DIR}/../target/debug/scrap"
+fi
+
+# If still not found, suggest building it
+if [ ! -f "$BINARY_PATH" ]; then
+    echo "Error: scrap binary not found. Please run 'cargo build --release' first."
+    exit 1
+fi
+
+# If no arguments, change to .scrap directory
+if [ $# -eq 0 ]; then
+    # Run the binary and capture output
+    OUTPUT=$("$BINARY_PATH" 2>&1)
+    EXIT_CODE=$?
+    
+    if [ $EXIT_CODE -eq 0 ]; then
+        # The output should be the .scrap directory path
+        cd "$OUTPUT" 2>/dev/null || echo "Failed to change directory to: $OUTPUT"
+    else
+        # Print error message
+        echo "$OUTPUT"
+        exit $EXIT_CODE
+    fi
+else
+    # Pass all arguments to the binary
+    "$BINARY_PATH" "$@"
+fi

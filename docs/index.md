@@ -1,26 +1,45 @@
 ---
 layout: default
-title: Refac - String Replacement Tool
+title: Refac Tools - File Management Suite
 toc: false
 ---
 
-# Refac
+# Refac Tools
 
-A robust, cross-platform command-line tool for recursive string replacement in file/folder names and contents. Designed for safety, reliability, and performance, making it suitable for mission-critical operations like large-scale project refactoring.
+A comprehensive collection of robust, cross-platform command-line tools for file and directory operations. The suite includes **refac** for string replacement, **scrap** for smart file management, and **unscrap** for file restoration. Designed for safety, reliability, and performance, making them suitable for mission-critical operations.
 
-## Key Features
+## Tools Overview
 
+### 🔄 Refac - String Replacement Tool
 - **Dual Operation**: Replace strings in both file/directory names AND file contents
 - **Safety First**: Collision detection, dry-run mode, and binary file protection
 - **High Performance**: Multi-threaded processing with progress tracking
-- **Cross-Platform**: Works on Windows, macOS, and Linux
 - **Flexible Filtering**: Include/exclude patterns with glob and regex support
-- **Multiple Modes**: Files-only, directories-only, names-only, or content-only processing
+
+### 🗂️ Scrap - Smart File Management
+- **Temporary Storage**: Move files to `.scrap` folder with automatic organization
+- **Metadata Tracking**: Remember original locations and timestamps
+- **Advanced Operations**: List, search, clean, archive, and restore capabilities
+- **Git Integration**: Automatic `.gitignore` management
+
+### ↩️ Unscrap - File Restoration
+- **Smart Recovery**: Restore files to their original locations
+- **Undo Operations**: Quickly undo the last scrap action
+- **Custom Destinations**: Restore to any location
+- **Conflict Handling**: Safe restoration with overwrite protection
+
+## Key Features
+
+- **Cross-Platform**: Works on Windows, macOS, and Linux
+- **Safety First**: Collision detection, confirmation prompts, and atomic operations
+- **Performance Optimized**: Multi-threaded processing and efficient file handling
+- **User Friendly**: Clear error messages and comprehensive help
 
 ## Quick Start
 
+### Refac - String Replacement
 ```bash
-# Basic usage
+# Basic string replacement
 refac . "oldname" "newname"
 
 # Preview changes first (recommended)
@@ -28,12 +47,36 @@ refac . "oldname" "newname" --dry-run
 
 # Only rename files/directories (skip content)
 refac . "oldname" "newname" --names-only
+```
 
-# Only replace content (skip renaming)
-refac . "oldname" "newname" --content-only
+### Scrap - File Management
+```bash
+# Move files to .scrap folder
+scrap old_file.txt temp_directory/
 
-# Create backups before changes
-refac . "oldname" "newname" --backup
+# List contents of .scrap folder
+scrap
+
+# Search for files
+scrap find "*.log"
+
+# Clean old items (30+ days)
+scrap clean
+
+# Archive and remove all items
+scrap archive --remove
+```
+
+### Unscrap - File Restoration
+```bash
+# Restore last scrapped item
+unscrap
+
+# Restore specific file
+unscrap filename.txt
+
+# Restore to custom location
+unscrap filename.txt --to /new/location/
 ```
 
 ## Installation
@@ -44,7 +87,14 @@ refac . "oldname" "newname" --backup
 git clone https://github.com/jowharshamshiri/refac
 cd refac
 cargo build --release
+
+# Install all tools
 cargo install --path .
+
+# Or install individual tools
+cargo install --path . --bin refac
+cargo install --path . --bin scrap
+cargo install --path . --bin unscrap
 ```
 
 ## How It Works

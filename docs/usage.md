@@ -5,9 +5,26 @@ title: Usage Guide
 
 # Usage Guide
 
-This comprehensive guide covers all aspects of using Refac effectively for string replacement in your projects.
+This comprehensive guide covers all aspects of using the Refac Tools suite for file operations, string replacement, and workspace management.
 
-## Basic Usage
+## Tools Overview
+
+### Refac - String Replacement Tool
+```bash
+refac <ROOT_DIR> <OLD_STRING> <NEW_STRING> [OPTIONS]
+```
+
+### Scrap - File Management Tool
+```bash
+scrap [FILE/DIR] [SUBCOMMAND] [OPTIONS]
+```
+
+### Unscrap - File Restoration Tool
+```bash
+unscrap [FILE/DIR] [OPTIONS]
+```
+
+## Refac - String Replacement
 
 ### Command Syntax
 
@@ -395,8 +412,126 @@ for pattern in "${PATTERNS[@]}"; do
 done
 ```
 
+## Scrap - File Management
+
+The scrap tool provides temporary file storage and organization using a `.scrap` folder.
+
+### Basic Operations
+
+```bash
+# Move files to .scrap folder
+scrap temp_file.txt old_directory/
+
+# List contents (default behavior)
+scrap
+
+# Search for files
+scrap find "*.log"
+
+# Clean old items
+scrap clean --days 30
+
+# Archive everything
+scrap archive --remove
+```
+
+### Workflow Examples
+
+```bash
+# Development workflow
+scrap debug.log temp_output/ experimental_code/
+# Continue working...
+scrap clean --days 7  # Weekly cleanup
+
+# Project organization
+scrap old_version/ deprecated_files/
+scrap archive --output "project-backup-v1.0.tar.gz"
+```
+
+For detailed information, see the [Scrap Tool Guide]({{ '/scrap-guide/' | relative_url }}).
+
+## Unscrap - File Restoration
+
+The unscrap tool restores files from `.scrap` back to their original locations.
+
+### Basic Operations
+
+```bash
+# Restore last scrapped item
+unscrap
+
+# Restore specific file
+unscrap filename.txt
+
+# Restore to custom location
+unscrap file.txt --to /new/location/
+
+# Force overwrite existing files
+unscrap file.txt --force
+```
+
+### Workflow Examples
+
+```bash
+# Quick recovery
+scrap important.txt  # Accidental scrap
+unscrap              # Quick undo
+
+# Selective restoration
+scrap list           # See what's available
+unscrap old_config.json --to ./backup/
+```
+
+For detailed information, see the [Unscrap Tool Guide]({{ '/unscrap-guide/' | relative_url }}).
+
+## Tool Integration
+
+### Combined Workflows
+
+```bash
+# Safe refactoring workflow
+scrap old_implementation.rs  # Backup current code
+refac . "OldClass" "NewClass" --dry-run  # Preview changes
+refac . "OldClass" "NewClass"  # Apply changes
+# If issues arise: unscrap old_implementation.rs
+
+# Project cleanup
+scrap temp_* debug_* old_*/  # Move temporary files
+refac . "old_project_name" "new_project_name"  # Rename project
+scrap clean --days 14  # Clean old scrapped files
+```
+
+### Automation Scripts
+
+```bash
+#!/bin/bash
+# safe-refactor.sh
+OLD="$1"
+NEW="$2"
+
+# Backup current state
+echo "Creating backup..."
+scrap archive --output "backup-$(date +%s).tar.gz"
+
+# Preview changes
+echo "Previewing changes..."
+refac . "$OLD" "$NEW" --dry-run
+
+# Ask for confirmation
+read -p "Apply changes? (y/N) " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    refac . "$OLD" "$NEW"
+    echo "Refactoring complete!"
+else
+    echo "Operation cancelled."
+fi
+```
+
 ## Next Steps
 
 - Check the [Command Reference]({{ '/api-reference/' | relative_url }}) for complete option details
+- See [Scrap Tool Guide]({{ '/scrap-guide/' | relative_url }}) for advanced file management
+- See [Unscrap Tool Guide]({{ '/unscrap-guide/' | relative_url }}) for restoration workflows
 - See [Examples]({{ '/examples/' | relative_url }}) for more real-world scenarios
 - Report issues at [GitHub Issues](https://github.com/jowharshamshiri/refac/issues)

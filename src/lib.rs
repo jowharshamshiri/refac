@@ -1,15 +1,16 @@
-pub mod cli;
-pub mod file_ops;
-pub mod rename_engine;
-pub mod collision_detector;
-pub mod binary_detector;
-pub mod progress;
+pub mod refac;
+pub mod scrap;
 
 use anyhow::{Context, Result};
 use std::path::Path;
 
-pub use cli::{Args, Mode};
-pub use rename_engine::RenameEngine;
+// Re-export from refac module for backward compatibility
+pub use refac::cli as cli;
+pub use refac::cli::{Args, Mode};
+pub use refac::rename_engine::RenameEngine;
+
+// Re-export from scrap module
+pub use scrap::scrap_common::{ScrapMetadata, ScrapEntry};
 
 /// Main entry point for the refac operation
 pub fn run_refac(args: Args) -> Result<()> {
